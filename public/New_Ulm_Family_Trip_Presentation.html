@@ -1,0 +1,1899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Ulm Family Day Trip — Interactive Presentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #0c1514;
+      --bg-surface: #142220;
+      --bg-surface-elevated: #1c2e2c;
+      --bg-card: rgba(26, 42, 39, 0.85);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-highlight: rgba(74, 222, 128, 0.25);
+      --primary: #10b981;
+      --primary-light: #34d399;
+      --accent-amber: #f59e0b;
+      --accent-warm: #fb923c;
+      --accent-blue: #38bdf8;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --text-dim: #6b7280;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 8px;
+      --shadow-card: 0 16px 36px -8px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.06);
+      --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Bar Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(12, 21, 20, 0.9);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #059669, #10b981);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .brand-text h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+
+    .brand-text p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* Progress Indicators */
+    .progress-bar-container {
+      flex: 1;
+      max-width: 540px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 4px;
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .progress-step {
+      flex: 1;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.15);
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .progress-step:hover {
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    .progress-step.active {
+      background: linear-gradient(90deg, var(--primary-light), var(--accent-amber));
+      box-shadow: 0 0 10px rgba(52, 211, 153, 0.6);
+    }
+
+    .progress-step.completed {
+      background: var(--primary);
+    }
+
+    /* Header Controls */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-icon {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 15px;
+    }
+
+    .btn-icon:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+
+    .btn-icon.active {
+      background: var(--primary);
+      color: #0c1514;
+      border-color: var(--primary-light);
+    }
+
+    .btn-badge {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--primary-light);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-badge:hover {
+      background: rgba(16, 185, 129, 0.25);
+    }
+
+    /* Presentation Main Viewport */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      padding: 24px;
+      max-width: 1500px;
+      margin: 0 auto;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .slides-wrapper {
+      position: relative;
+      width: 100%;
+      min-height: calc(100vh - 160px);
+      display: flex;
+      align-items: center;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      animation: fadeInSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .slide.active {
+      display: block;
+    }
+
+    @keyframes fadeInSlide {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.99);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Slide Grid Layout */
+    .slide-layout {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-card);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide-layout::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, rgba(0, 0, 0, 0) 70%);
+      pointer-events: none;
+    }
+
+    /* Left Column: Visual Showcase */
+    .visual-column {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .media-card {
+      position: relative;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: #111;
+      aspect-ratio: 16 / 10;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5);
+      cursor: zoom-in;
+    }
+
+    .media-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+      display: block;
+    }
+
+    .media-card:hover img {
+      transform: scale(1.03);
+    }
+
+    .media-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: rgba(12, 21, 20, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      z-index: 2;
+    }
+
+    .media-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 30px 18px 14px;
+      background: linear-gradient(0deg, rgba(10, 18, 17, 0.95) 0%, rgba(10, 18, 17, 0.4) 65%, transparent 100%);
+      font-size: 0.85rem;
+      color: var(--text-main);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .media-caption {
+      font-weight: 500;
+    }
+
+    .photo-switcher {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .photo-tab {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+
+    .photo-tab:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .photo-tab.active {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: var(--primary-light);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* Right Column: Narrative Details */
+    .info-column {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      justify-content: space-between;
+    }
+
+    .stop-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .meta-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--primary-light);
+      border: 1px solid rgba(52, 211, 153, 0.25);
+    }
+
+    .time-tag {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent-amber);
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 4px 10px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .slide-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      color: #ffffff;
+    }
+
+    .slide-location {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .feature-boxes {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .feature-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      transition: var(--transition);
+    }
+
+    .feature-box:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .feature-icon {
+      font-size: 1.2rem;
+      line-height: 1;
+      margin-top: 2px;
+    }
+
+    .feature-text h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .feature-text p {
+      font-size: 0.8rem;
+      line-height: 1.45;
+      color: var(--text-muted);
+    }
+
+    .tip-box {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 146, 60, 0.05));
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .tip-box .tip-icon {
+      color: var(--accent-amber);
+      font-size: 1.1rem;
+    }
+
+    .tip-box p {
+      font-size: 0.8rem;
+      line-height: 1.4;
+      color: #fed7aa;
+    }
+
+    .tip-box strong {
+      color: #fff;
+    }
+
+    /* Cover Slide Specifics */
+    .cover-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
+      align-items: center;
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 44px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .cover-title-group h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #ffffff 0%, #a7f3d0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .cover-tagline {
+      font-size: 1.05rem;
+      line-height: 1.5;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary-light);
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .route-flow {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.8rem;
+    }
+
+    .route-node {
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .route-arrow {
+      color: var(--primary-light);
+      font-size: 0.9rem;
+    }
+
+    /* Cover Visual Grid */
+    .cover-gallery {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      grid-template-rows: repeat(2, 160px);
+      gap: 12px;
+    }
+
+    .cover-photo {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      position: relative;
+      border: 1px solid var(--border-subtle);
+      cursor: zoom-in;
+    }
+
+    .cover-photo.span-2 {
+      grid-row: span 2;
+    }
+
+    .cover-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .cover-photo:hover img {
+      transform: scale(1.05);
+    }
+
+    /* Navigation Bar at Bottom */
+    .bottom-nav {
+      margin-top: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-subtle);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-1px);
+    }
+
+    .nav-btn.primary {
+      background: linear-gradient(135deg, #059669, #10b981);
+      border: none;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+      color: #0c1514;
+      font-weight: 700;
+    }
+
+    .nav-btn.primary:hover {
+      background: linear-gradient(135deg, #047857, #059669);
+      color: #fff;
+    }
+
+    .nav-shortcuts {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    kbd {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-muted);
+      font-family: monospace;
+    }
+
+    /* Overview Modal Grid */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-container {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 1100px;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 28px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .modal-header h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .grid-thumbnails {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .thumb-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: left;
+    }
+
+    .thumb-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--primary-light);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .thumb-card.active {
+      border: 2px solid var(--primary-light);
+      box-shadow: 0 0 16px rgba(52, 211, 153, 0.4);
+    }
+
+    .thumb-img {
+      height: 120px;
+      width: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .thumb-content {
+      padding: 10px 12px;
+    }
+
+    .thumb-time {
+      font-size: 0.7rem;
+      color: var(--accent-amber);
+      font-weight: 600;
+    }
+
+    .thumb-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #fff;
+      margin-top: 2px;
+    }
+
+    /* Checklist & Summary Table Styles */
+    .checklist-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    .checklist-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+    }
+
+    .checklist-card h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--primary-light);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .checklist-items {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    .checklist-item input[type="checkbox"] {
+      accent-color: var(--primary);
+      width: 15px;
+      height: 15px;
+      cursor: pointer;
+    }
+
+    /* Table styling for Itinerary Summary */
+    .itinerary-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin-top: 10px;
+    }
+
+    .itinerary-table th {
+      background: rgba(255, 255, 255, 0.06);
+      text-align: left;
+      padding: 8px 10px;
+      color: var(--text-muted);
+      font-weight: 600;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .itinerary-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--text-main);
+    }
+
+    .itinerary-table tr:hover td {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    /* Lightbox Modal */
+    .lightbox-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(16px);
+      z-index: 150;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      cursor: zoom-out;
+    }
+
+    .lightbox-modal.open {
+      display: flex;
+    }
+
+    .lightbox-modal img {
+      max-width: 90vw;
+      max-height: 85vh;
+      border-radius: var(--radius-md);
+      box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      object-fit: contain;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .slide-layout, .cover-layout {
+        grid-template-columns: 1fr;
+        padding: 24px;
+        gap: 20px;
+      }
+      .slide-title {
+        font-size: 1.6rem;
+      }
+      .cover-title-group h1 {
+        font-size: 2.2rem;
+      }
+      .cover-gallery {
+        grid-template-rows: repeat(2, 130px);
+      }
+    }
+
+    /* Print Stylesheet for 1-click PDF/Print Itinerary */
+    @media print {
+      body {
+        background: #fff !important;
+        color: #111 !important;
+      }
+      header, .bottom-nav, .modal-backdrop, .lightbox-modal, .photo-switcher {
+        display: none !important;
+      }
+      .slide {
+        display: block !important;
+        page-break-after: always;
+        margin-bottom: 40px;
+      }
+      .slide-layout, .cover-layout {
+        background: #fff !important;
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+        color: #111 !important;
+      }
+      .slide-title, .feature-text h4, .stat-number {
+        color: #111 !important;
+      }
+      .feature-text p, .stat-label, .slide-location {
+        color: #555 !important;
+      }
+      .tip-box {
+        background: #fff8eb !important;
+        border: 1px solid #fbd38d !important;
+      }
+      .tip-box p {
+        color: #744210 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top App Navigation -->
+  <header>
+    <div class="brand" onclick="goToSlide(0)">
+      <div class="brand-icon">🌲</div>
+      <div class="brand-text">
+        <h1>New Ulm Day Trip</h1>
+        <p>Authentic Minnesota Family & Nature Guide</p>
+      </div>
+    </div>
+
+    <!-- Interactive Progress Step Line -->
+    <div class="progress-bar-container" id="progressBar">
+      <!-- Generated via JavaScript -->
+    </div>
+
+    <!-- Actions & Controls -->
+    <div class="header-actions">
+      <button class="btn-badge" id="chimeBtn" title="Play Westminster Glockenspiel Chime" onclick="playGlockenspielChime()">
+        🔔 <span>Glockenspiel Chime</span>
+      </button>
+      <button class="btn-icon" id="gridBtn" title="View all slides (O)" onclick="toggleOverviewModal()">
+        ▦
+      </button>
+      <button class="btn-icon" id="autoPlayBtn" title="Toggle Auto-play (A)" onclick="toggleAutoPlay()">
+        ▶
+      </button>
+      <button class="btn-icon" id="fullscreenBtn" title="Fullscreen (F)" onclick="toggleFullscreen()">
+        ⛶
+      </button>
+      <button class="btn-icon" title="Print / Save PDF" onclick="window.print()">
+        🖨
+      </button>
+    </div>
+  </header>
+
+  <!-- Presentation Viewport -->
+  <main>
+    <div class="slides-wrapper" id="slidesWrapper">
+
+      <!-- SLIDE 1: Title & Road Trip Introduction -->
+      <section class="slide active" data-title="Overview & Route" data-time="All Day">
+        <div class="cover-layout">
+          <div class="cover-title-group">
+            <div class="stop-meta">
+              <span class="meta-tag">Family Day Trip</span>
+              <span class="time-tag">⏱ Low-Stress Saturday Schedule</span>
+            </div>
+            <h1 style="margin-top: 12px;">New Ulm & St. Peter</h1>
+            <p class="cover-tagline">
+              A complete, toddler-friendly road trip guide from Eden Prairie along the scenic Minnesota River Valley. Packed with lush shaded parks, free-roaming wildlife, gentle river trails, musical bells, and relaxing family fun.
+            </p>
+
+            <div class="stats-row">
+              <div class="stat-card">
+                <div class="stat-number">55m</div>
+                <div class="stat-label">Initial Drive to St. Peter</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number">6 Stops</div>
+                <div class="stat-label">Nature, Animals & Food</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number">1:15 PM</div>
+                <div class="stat-label">Shaded Nap Walk Window</div>
+              </div>
+            </div>
+
+            <div class="route-flow">
+              <span class="route-node">🏡 Eden Prairie</span>
+              <span class="route-arrow">➔ US-169 S</span>
+              <span class="route-node">🎪 St. Peter</span>
+              <span class="route-arrow">➔ MN-99 W</span>
+              <span class="route-node">🇩🇪 New Ulm</span>
+            </div>
+          </div>
+
+          <!-- Cover Image Mosaic (100% Authentic Photos) -->
+          <div class="cover-gallery">
+            <div class="cover-photo span-2" onclick="openLightbox('new_ulm_presentation_assets/images/hermann_monument.jpg')">
+              <img src="new_ulm_presentation_assets/images/hermann_monument.jpg" alt="Hermann the German Monument New Ulm">
+            </div>
+            <div class="cover-photo" onclick="openLightbox('new_ulm_presentation_assets/images/cottonwood_river.jpg')">
+              <img src="new_ulm_presentation_assets/images/cottonwood_river.jpg" alt="Cottonwood River Flandrau State Park">
+            </div>
+            <div class="cover-photo" onclick="openLightbox('new_ulm_presentation_assets/images/schell_deer_park.jpg')">
+              <img src="new_ulm_presentation_assets/images/schell_deer_park.jpg" alt="Deer in Schell Deer Park New Ulm">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: Morning Departure & Scenic Drive -->
+      <section class="slide" data-title="Morning Departure" data-time="9:30 AM">
+        <div class="slide-layout">
+          <div class="visual-column">
+            <div class="media-card" onclick="openLightbox(this.querySelector('img').src)">
+              <span class="media-badge">🚗 US-169 & MN-99 Scenic Drive</span>
+              <img id="imgSlide2" src="new_ulm_presentation_assets/images/st_peter_route_sign.jpg" alt="US 169 and MN 99 Route Sign in St Peter">
+              <div class="media-overlay">
+                <span class="media-caption" id="capSlide2">Heading south on US-169 to MN-99 in St. Peter</span>
+                <span style="font-size: 0.75rem; opacity: 0.8;">Click to Zoom</span>
+              </div>
+            </div>
+            <div class="photo-switcher">
+              <button class="photo-tab active" onclick="switchPhoto('imgSlide2', 'capSlide2', 'new_ulm_presentation_assets/images/st_peter_route_sign.jpg', 'Heading south on US-169 to MN-99 in St. Peter', this)">
+                <span>🛣️ Highway Route</span>
+              </button>
+              <button class="photo-tab" onclick="switchPhoto('imgSlide2', 'capSlide2', 'new_ulm_presentation_assets/images/brown_county_farmland_valley.jpg', 'Aerial view of Minnesota River Valley bluffs and farmland', this)">
+                <span>🌾 Valley Bluffs</span>
+              </button>
+              <button class="photo-tab" onclick="switchPhoto('imgSlide2', 'capSlide2', 'new_ulm_presentation_assets/images/minnesota_river_scenic.jpg', 'The scenic Minnesota River winding through southern Minnesota', this)">
+                <span>🌊 Minnesota River</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="info-column">
+            <div>
+              <div class="stop-meta">
+                <span class="meta-tag">Leg 1 • Road Trip Start</span>
+                <span class="time-tag">⏰ 9:30 AM Departure</span>
+              </div>
+              <h2 class="slide-title" style="margin-top: 8px;">Eden Prairie ➔ St. Peter</h2>
+              <p class="slide-location">📍 Route: US-169 South (~55 mins, 48 miles)</p>
+            </div>
+
+            <div class="feature-boxes">
+              <div class="feature-box">
+                <div class="feature-icon">☀️</div>
+                <div class="feature-text">
+                  <h4>Smooth Morning Departure</h4>
+                  <p>Hitting the road by 9:30 AM lets the toddler stay in high spirits and catches the quietest stretch of highway before lunchtime traffic.</p>
+                </div>
+              </div>
+              <div class="feature-box">
+                <div class="feature-icon">🌳</div>
+                <div class="feature-text">
+                  <h4>Minnesota River Valley Views</h4>
+                  <p>The drive along US-169 follows the sweeping curve of the Minnesota River Valley, passing Shakopee, Jordan, and Belle Plaine with lush green bluffs.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="tip-box">
+              <div class="tip-icon">💡</div>
+              <p><strong>Toddler Road Trip Tip:</strong> Keep a spill-proof snack cup, travel sippy cup, and a small bin of car toys within arm's reach from the front passenger seat.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: Stop 1 - Minnesota Square Park & Farmers Market -->
+      <section class="slide" data-title="St. Peter Pit Stop" data-time="10:25 AM – 10:55 AM">
+        <div class="slide-layout">
+          <div class="visual-column">
+            <div class="media-card" onclick="openLightbox(this.querySelector('img').src)">
+              <span class="media-badge">🎪 Fresh Baked Goods & Shaded Play</span>
+              <img id="imgSlide3" src="new_ulm_presentation_assets/images/st_peter_bandstand.jpg" alt="Minnesota Square Park Bandstand St Peter">
+              <div class="media-overlay">
+                <span class="media-caption" id="capSlide3">Historic Bandstand & mature shade trees at Minnesota Square Park</span>
+                <span style="font-size: 0.75rem; opacity: 0.8;">Click to Zoom</span>
+              </div>
+            </div>
+            <div class="photo-switcher">
+              <button class="photo-tab active" onclick="switchPhoto('imgSlide3', 'capSlide3', 'new_ulm_presentation_assets/images/st_peter_bandstand.jpg', 'Historic Bandstand & mature shade trees at Minnesota Square Park', this)">
+                <span>🌳 Shaded Park & Bandstand</span>
+              </button>
+              <button class="photo-tab" onclick="switchPhoto('imgSlide3', 'capSlide3', 'new_ulm_presentation_assets/images/family_picnic_park.jpg', 'Family enjoying a sunny shaded picnic under the park trees', this)">
+                <span>🧺 Shaded Park Gathering</span>
+              </button>
+              <button class="photo-tab" onclick="switchPhoto('imgSlide3', 'capSlide3', 'new_ulm_presentation_assets/images/st_peter_downtown.jpg', 'Downtown Minnesota Avenue in historic St. Peter', this)">
+                <span>🏘️ Downtown St. Peter</span>
+              </button>
+              <button class="photo-tab" onclick="switchPhoto('imgSlide3', 'capSlide3', 'new_ulm_presentation_assets/images/father_daughter_park.jpg', 'Father and daughter enjoying a sunny park visit', this)">
+                <span>👨‍👧 Park Picnic</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="info-column">
+            <div>
+              <div class="stop-meta">
+                <span class="meta-tag">Stop 1 • Leg-Stretch & Snacks</span>
+                <span class="time-tag">⏰ 10:25 AM – 10:55 AM (30 mins)</span>
+              </div>
+              <h2 class="slide-title" style="margin-top: 8px;">Minnesota Square Park</h2>
+              <p class="slide-location">📍 South Minnesota Ave, St. Peter, MN</p>
+            </div>
+
+            <div class="feature-boxes">
+              <div class="feature-box">
+                <div class="feature-icon">🥐</div>
+                <div class="feature-text">
+                  <h4>Local Saturday Farmers Market</h4>
+                  <p>Runs Saturday mornings until 12:00 PM. Grab fresh local pastries, fresh-picked berries for the kids, and hot artisan coffee for parents.</p>
+                </div>
+              </div>
+              <div class="feature-box">
+                <div class="feature-icon">🛝</div>
+                <div class="feature-text">
+                  <h4>Shaded Playground & Clean Restrooms</h4>
+                  <p>Full playground structure nestled under enormous mature oak trees with accessible clean public restrooms right next to the path.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="tip-box">
+              <div class="tip-icon">🅿️</div>
+              <p><strong>Pro Parking Tip:</strong> Turn onto <strong>South 3rd Street or Grace Street</strong> for quiet, shaded curb parking directly alongside the grass and play structure.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Stop 2 - Downtown New Ulm & The Glockenspiel -->
+      <section class="slide" data-title="Glockenspiel & Lunch" data-time="11:40 AM – 1:00 PM">
+        <div class="slide-layout">
+          <div class="visual-column">
+            <div class="media-card" onclick="openLightbox(this.querySelector('img').src)">
+              <span class="media-badge">🔔 Schonlau Park & Downtown Cafes</span>
+              <img id="imgSlide4" src="new_ulm_presentation_assets/images/schonlau_park_downtown.jpg" alt="Schonlau Park Downtown New Ulm">
+              <div class="media-overlay">
+                <span class="media-caption" id="capSlide4">Schonlau Park on Minnesota Street, home of the Glockenspiel</span>
+                <span style="font-size: 0.75rem; opacity: 0.8;">Click to Zoom</span>
+              </div>
+            </div>
+            <div class="photo-switcher">
+              <button class="photo-tab active" onclick="switchPhoto('imgSlide4', 'capSlide4', 'new_ulm_presentation_assets/images/schonlau_park_downtown.jpg', 'Schonlau Park on Minnesota Street, home of the Glockenspiel', this)">
+                <span>🔔 Schonlau Park</span>
+              </button>
+              <button class="photo-tab" onclick="switchPhoto('imgSlide4', 'capSlide4', 'new_ulm_presentation_assets/images/downtown_minnesota_st.jpg', 'Historic Minnesota Street Commercial Historic District', this)">
+                <span>🏘️ Minnesota Street</span>
+              </button>
+              <button class="photo-tab" onclick="switchPhoto('imgSlide4', 'capSlide4', 'new_ulm_presentation_assets/images/melges_bakery.jpg', 'Historic Melges Bakery building on Minnesota Street', this)">
+                <span>🥨 Historic Bakery</span>
+              </button>
+              <button class="photo-tab" onclick="switchPhoto('imgSlide4', 'capSlide4', 'new_ulm_presentation_assets/images/german_signpost_new_ulm.jpg', 'German heritage street signpost in downtown New Ulm', this)">
+                <span>🇩🇪 Heritage Signpost</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="info-column">
+            <div>
+              <div class="stop-meta">
+                <span class="meta-tag">Stop 2 • Downtown New Ulm</span>
+                <span class="time-tag">⏰ 11:40 AM – 1:00 PM (80 mins)</span>
+              </div>
+              <h2 class="slide-title" style="margin-top: 8px;">The Glockenspiel & Lunch</h2>
+              <p class="slide-location">📍 Schonlau Park (4th N & Minnesota St), New Ulm</p>
+            </div>
+
+            <div class="feature-boxes">
+              <div class="feature-box">
+                <div class="feature-icon">🎶</div>
+                <div class="feature-text">
+                  <h4>The 12:00 PM Noon Chime Performance</h4>
+                  <p>Arrive at Schonlau Park by 11:45 AM. At precisely 12:00 PM, 37 bells chime musical tunes while 12 handcrafted animated figures rotate on stage. Kids are mesmerized!</p>
+                </div>
+              </div>
+              <div class="feature-box">
+                <div class="feature-icon">🍽️</div>
+                <div class="feature-text">
+                  <h4>Minnesota Street Walk & Lunch</h4>
+                  <p>Walk directly along Minnesota Street for family-friendly casual bakeries, German delis, fresh soft pretzels, and outdoor shaded bistro tables.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="tip-box">
+              <div class="tip-icon">🔔</div>
+              <p><strong>Sound preview available:</strong> Click the <strong>"Glockenspiel Chime"</strong> button in the top bar to hear the musical carillon chime!</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Stop 3 - Flandrau State Park (Stroller Nap Walk) -->
+      <section class="slide" data-title="Flandrau Nap Walk" data-time="1:15 PM – 2:30 PM">
+        <div class="slide-layout">
+          <div class="visual-column">
+            <div class="media-card" onclick="openLightbox(this.querySelector('img').src)">
+              <span class="media-badge">🌿 Shaded Riverside Stroller Trails</span>
+              <img id="imgSlide5" src="new_ulm_presentation_assets/images/cottonwood_river.jpg" alt="Cottonwood River Flandrau State Park">
+              <div class="media-overlay">
+                <span class="media-caption" id="capSlide5">Gentle Cottonwood River flowing through Flandrau State Park</span>
+                <span style="font-size: 0.75rem; opacity: 0.8;">Click to Zoom</span>
+              </div>
+            </div>
+            <div class="photo-switcher">
+              <button class="photo-tab active" onclick="switchPhoto('imgSlide5', 'capSlide5', 'new_ulm_presentation_assets/images/cottonwood_river.jpg', 'Gentle Cottonwood River flowing through Flandrau State Park', this)">
+                <span>🌊 Cottonwood River</span>
+              </button>
+              <button class="photo-tab" onclick="switchPhoto('imgSlide5', 'capSlide5', 'new_ulm_presentation_assets/images/flandrau_beachhouse.jpg', 'Historic rustic stone Beach House in Flandrau State Park', this)">
+                <span>🏖️ Stone Beach House</span>
+              </button>
+              <button class="photo-tab" onclick="switchPhoto('imgSlide5', 'capSlide5', 'new_ulm_presentation_assets/images/flandrau_trail_woods.jpg', 'Shaded dirt and limestone trail along the riverbank in the woods', this)">
+                <span>🌳 Shaded Riverbank Trail</span>
+              </button>
+              <button class="photo-tab" onclick="switchPhoto('imgSlide5', 'capSlide5', 'new_ulm_presentation_assets/images/flandrau_group_camp.jpg', 'Tall forest canopy and picnic area in Flandrau State Park', this)">
+                <span>⛺ Forest Canopy</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="info-column">
+            <div>
+              <div class="stop-meta">
+                <span class="meta-tag">Stop 3 • Nature & Serenity</span>
+                <span class="time-tag">⏰ 1:15 PM – 2:30 PM (75 mins)</span>
+              </div>
+              <h2 class="slide-title" style="margin-top: 8px;">Flandrau State Park</h2>
+              <p class="slide-location">📍 1300 Summit Ave, New Ulm (5 mins south of downtown)</p>
+            </div>
+
+            <div class="feature-boxes">
+              <div class="feature-box">
+                <div class="feature-icon">💤</div>
+                <div class="feature-text">
+                  <h4>The Toddler Stroller Nap Sanctuary</h4>
+                  <p>Wide, flat, heavily shaded walking trails alongside the Cottonwood River. The gentle river breeze and rustling cottonwood leaves create the ultimate natural white noise for naptime.</p>
+                </div>
+              </div>
+              <div class="feature-box">
+                <div class="feature-icon">🦅</div>
+                <div class="feature-text">
+                  <h4>Scenic Nature & Wildlife</h4>
+                  <p>Songbirds, turtles sunbathing on logs, clear water shallows, and towering sandstone cliffs. Perfect peaceful recharge for parents while baby sleeps soundly.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="tip-box">
+              <div class="tip-icon">👟</div>
+              <p><strong>Trail Tip:</strong> Park near the main Cottonwood River Trailhead. Trails are packed dirt and crushed limestone—very smooth and easy for standard strollers.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: Stop 4 - August Schell Brewing Co. Grounds & Deer Park -->
+      <section class="slide" data-title="Schell Gardens & Animals" data-time="2:45 PM – 3:45 PM">
+        <div class="slide-layout">
+          <div class="visual-column">
+            <div class="media-card" onclick="openLightbox(this.querySelector('img').src)">
+              <span class="media-badge">🦌 Peacocks, Deer Park & Estate Gardens</span>
+              <img id="imgSlide6" src="new_ulm_presentation_assets/images/schell_deer_park.jpg" alt="August Schell Brewery Grounds and Deer Park New Ulm">
+              <div class="media-overlay">
+                <span class="media-caption" id="capSlide6">Live deer in the on-site Schell Deer Park enclosure</span>
+                <span style="font-size: 0.75rem; opacity: 0.8;">Click to Zoom</span>
+              </div>
+            </div>
+            <div class="photo-switcher">
+              <button class="photo-tab active" onclick="switchPhoto('imgSlide6', 'capSlide6', 'new_ulm_presentation_assets/images/schell_deer_park.jpg', 'Live deer in the on-site Schell Deer Park enclosure', this)">
+                <span>🦌 Live Deer Park</span>
+              </button>
+              <button class="photo-tab" onclick="switchPhoto('imgSlide6', 'capSlide6', 'new_ulm_presentation_assets/images/schell_mansion.jpg', 'Historic 1880s Schell family mansion and formal gardens', this)">
+                <span>🏡 Mansion & Gardens</span>
+              </button>
+              <button class="photo-tab" onclick="switchPhoto('imgSlide6', 'capSlide6', 'new_ulm_presentation_assets/images/schell_estate_grounds_valley.jpg', 'Estate grounds, walking paths, and wooded river valley', this)">
+                <span>🌳 Valley & Paths</span>
+              </button>
+              <button class="photo-tab" onclick="switchPhoto('imgSlide6', 'capSlide6', 'new_ulm_presentation_assets/images/schell_brewery.jpg', 'Historic 1860s August Schell Brewery brick buildings', this)">
+                <span>🏰 Historic Brewery</span>
+              </button>
+              <button class="photo-tab" onclick="switchPhoto('imgSlide6', 'capSlide6', 'new_ulm_presentation_assets/images/schell_beer_garden.jpg', 'Outdoor shaded Biergarten under mature black walnut trees', this)">
+                <span>🍻 Shaded Biergarten</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="info-column">
+            <div>
+              <div class="stop-meta">
+                <span class="meta-tag">Stop 4 • Wildlife, Nature & Heritage</span>
+                <span class="time-tag">⏰ 2:45 PM – 3:45 PM (60 mins)</span>
+              </div>
+              <h2 class="slide-title" style="margin-top: 8px;">August Schell Grounds</h2>
+              <p class="slide-location">📍 1860 Schell Rd, New Ulm (Secluded Cottonwood River Valley)</p>
+            </div>
+
+            <div class="feature-boxes">
+              <div class="feature-box">
+                <div class="feature-icon">🦚</div>
+                <div class="feature-text">
+                  <h4>Free-Roaming Peacocks & On-Site Deer Park</h4>
+                  <p>A flock of colorful resident peacocks roams freely through the flowerbeds and lawns, posing for photos. Behind the mansion, visit the historic 1880s deer park enclosure where kids can watch gentle white-tailed deer up close.</p>
+                </div>
+              </div>
+              <div class="feature-box">
+                <div class="feature-icon">🌺</div>
+                <div class="feature-text">
+                  <h4>German Botanical Gardens & Scenic Valley</h4>
+                  <p>Nestled down in a private, heavily wooded river valley. Stroll along paved paths surrounded by lush flowers, stone retaining walls, fountains, and towering black walnut trees.</p>
+                </div>
+              </div>
+              <div class="feature-box">
+                <div class="feature-icon">🥤</div>
+                <div class="feature-text">
+                  <h4>1919 Draft Root Beer & Shaded Biergarten</h4>
+                  <p>Fresh draft 1919 Root Beer on tap and giant warm pretzels for the kids, plus authentic German craft lagers for parents on the shaded garden patio.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="tip-box">
+              <div class="tip-icon">🌸</div>
+              <p><strong>Family Friendly:</strong> Paved, flat stroller paths throughout the estate. Walking the outdoor botanical gardens and visiting the deer park is completely free!</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: Stop 5 - Hermann Heights Park & Hermann the German -->
+      <section class="slide" data-title="Hermann Monument" data-time="3:50 PM – 4:30 PM">
+        <div class="slide-layout">
+          <div class="visual-column">
+            <div class="media-card" onclick="openLightbox(this.querySelector('img').src)">
+              <span class="media-badge">⛰️ 102-Ft Monument & Valley Panorama</span>
+              <img id="imgSlide7" src="new_ulm_presentation_assets/images/hermann_monument.jpg" alt="Hermann Heights Monument New Ulm">
+              <div class="media-overlay">
+                <span class="media-caption" id="capSlide7">The 102-foot Hermann the German monument standing high atop the bluff</span>
+                <span style="font-size: 0.75rem; opacity: 0.8;">Click to Zoom</span>
+              </div>
+            </div>
+            <div class="photo-switcher">
+              <button class="photo-tab active" onclick="switchPhoto('imgSlide7', 'capSlide7', 'new_ulm_presentation_assets/images/hermann_monument.jpg', 'The 102-foot Hermann the German monument standing high atop the bluff', this)">
+                <span>🛡️ Hermann Statue</span>
+              </button>
+              <button class="photo-tab" onclick="switchPhoto('imgSlide7', 'capSlide7', 'new_ulm_presentation_assets/images/hermann_panorama.jpg', 'Sweeping panoramic overlook of New Ulm and Minnesota River Valley', this)">
+                <span>🌄 Bluff Panoramic View</span>
+              </button>
+              <button class="photo-tab" onclick="switchPhoto('imgSlide7', 'capSlide7', 'new_ulm_presentation_assets/images/hermann_park_grounds.jpg', 'Park grounds and stone pavilion base at Hermann Heights Park', this)">
+                <span>🍂 Park Grounds</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="info-column">
+            <div>
+              <div class="stop-meta">
+                <span class="meta-tag">Stop 5 • Bluff Lookout & Play</span>
+                <span class="time-tag">⏰ 3:50 PM – 4:30 PM (40 mins)</span>
+              </div>
+              <h2 class="slide-title" style="margin-top: 8px;">Hermann Heights Park</h2>
+              <p class="slide-location">📍 10 Monument St, New Ulm, MN</p>
+            </div>
+
+            <div class="feature-boxes">
+              <div class="feature-box">
+                <div class="feature-icon">🦅</div>
+                <div class="feature-text">
+                  <h4>Minnesota River Valley Panoramic Overlook</h4>
+                  <p>Standing at the high bluff overlook offers 360-degree views of the church spires, river curves, and forested hills of Brown County.</p>
+                </div>
+              </div>
+              <div class="feature-box">
+                <div class="feature-icon">🏃‍♂️</div>
+                <div class="feature-text">
+                  <h4>Modern Park Playground</h4>
+                  <p>Features an expansive playground structure with slides, swings, and climbing sets. Ideal for burning off any remaining toddler wiggles before the car ride home.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="tip-box">
+              <div class="tip-icon">📸</div>
+              <p><strong>Photo Spot:</strong> Great family portrait location right in front of the stone rotunda with the afternoon sun illuminating the statue above.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: Stop 6 (Bonus / Backup) - Riverside Park -->
+      <section class="slide" data-title="Bonus: Riverside Park" data-time="Optional / Backup">
+        <div class="slide-layout">
+          <div class="visual-column">
+            <div class="media-card" onclick="openLightbox(this.querySelector('img').src)">
+              <span class="media-badge">⚓ Riverside Park & Nature Center</span>
+              <img id="imgSlide8" src="new_ulm_presentation_assets/images/riverside_park_new_ulm.jpg" alt="Riverside Park in New Ulm Minnesota">
+              <div class="media-overlay">
+                <span class="media-caption" id="capSlide8">Historic Riverside Park and grounds along the Minnesota River in New Ulm</span>
+                <span style="font-size: 0.75rem; opacity: 0.8;">Click to Zoom</span>
+              </div>
+            </div>
+            <div class="photo-switcher">
+              <button class="photo-tab active" onclick="switchPhoto('imgSlide8', 'capSlide8', 'new_ulm_presentation_assets/images/riverside_park_new_ulm.jpg', 'Historic Riverside Park and grounds along the Minnesota River in New Ulm', this)">
+                <span>⛵ Riverside Park Grounds</span>
+              </button>
+              <button class="photo-tab" onclick="switchPhoto('imgSlide8', 'capSlide8', 'new_ulm_presentation_assets/images/minnesota_river_scenic.jpg', 'The Minnesota River bank flowing past New Ulm', this)">
+                <span>🌊 Minnesota Riverbank</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="info-column">
+            <div>
+              <div class="stop-meta">
+                <span class="meta-tag">Backup / Bonus Stop</span>
+                <span class="time-tag">⏰ 1:00 PM – 4:00 PM (Flexible)</span>
+              </div>
+              <h2 class="slide-title" style="margin-top: 8px;">Riverside Park</h2>
+              <p class="slide-location">📍 101 S Front St, New Ulm, MN</p>
+            </div>
+
+            <div class="feature-boxes">
+              <div class="feature-box">
+                <div class="feature-icon">⚓</div>
+                <div class="feature-text">
+                  <h4>Pirate Ship Adventure & Play</h4>
+                  <p>A hit with young kids! A large wooden pirate ship play structure equipped with ship wheels, lookouts, and slides directly on the riverfront.</p>
+                </div>
+              </div>
+              <div class="feature-box">
+                <div class="feature-icon">🐢</div>
+                <div class="feature-text">
+                  <h4>Riverside History & Nature Learning Center</h4>
+                  <p>Open 1:00 PM – 4:00 PM on select weekends with interactive river wildlife displays, taxidermy, and hands-on nature discovery for little learners.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="tip-box">
+              <div class="tip-icon">🔀</div>
+              <p><strong>When to use this stop:</strong> If the nap finishes early or you want an extra 20 minutes of play before leaving town.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: Return Drive & Evening Wrap-Up -->
+      <section class="slide" data-title="Homeward Bound" data-time="4:30 PM – 5:00 PM">
+        <div class="slide-layout">
+          <div class="visual-column">
+            <div class="media-card" onclick="openLightbox(this.querySelector('img').src)">
+              <span class="media-badge">🌾 Minnesota Countryside Return Drive</span>
+              <img id="imgSlide9" src="new_ulm_presentation_assets/images/brown_county_farmland_valley.jpg" alt="Aerial view of Minnesota River Valley bluffs and farmland">
+              <div class="media-overlay">
+                <span class="media-caption" id="capSlide9">Rolling farmland and river bluffs on the return drive to Eden Prairie</span>
+                <span style="font-size: 0.75rem; opacity: 0.8;">Click to Zoom</span>
+              </div>
+            </div>
+            <div class="photo-switcher">
+              <button class="photo-tab active" onclick="switchPhoto('imgSlide9', 'capSlide9', 'new_ulm_presentation_assets/images/brown_county_farmland_valley.jpg', 'Rolling farmland and river bluffs on the return drive to Eden Prairie', this)">
+                <span>🌾 Countryside Route</span>
+              </button>
+              <button class="photo-tab" onclick="switchPhoto('imgSlide9', 'capSlide9', 'new_ulm_presentation_assets/images/minnesota_river_scenic.jpg', 'The scenic Minnesota River curving through the river valley', this)">
+                <span>🌊 River Valley</span>
+              </button>
+              <button class="photo-tab" onclick="switchPhoto('imgSlide9', 'capSlide9', 'new_ulm_presentation_assets/images/father_daughter_park.jpg', 'A peaceful day of family memories across Brown County', this)">
+                <span>👨‍👧 Happy Memories</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="info-column">
+            <div>
+              <div class="stop-meta">
+                <span class="meta-tag">Final Leg • Heading Home</span>
+                <span class="time-tag">⏰ 4:30 PM – 5:00 PM Departure</span>
+              </div>
+              <h2 class="slide-title" style="margin-top: 8px;">New Ulm ➔ Eden Prairie</h2>
+              <p class="slide-location">📍 Route: US-14 E to US-169 N (~85 mins, 78 miles)</p>
+            </div>
+
+            <div class="feature-boxes">
+              <div class="feature-box">
+                <div class="feature-icon">✨</div>
+                <div class="feature-text">
+                  <h4>A Full Day of Happy Memories</h4>
+                  <p>Chiming Glockenspiel bells, shaded forest river trails, live peacocks and deer, farmers market sweets, and playground laughter—all within a calm single-day outing.</p>
+                </div>
+              </div>
+              <div class="feature-box">
+                <div class="feature-icon">🍔</div>
+                <div class="feature-text">
+                  <h4>Dinner Along the Way (Optional)</h4>
+                  <p>If anyone gets hungry, Belle Plaine or Jordan make convenient 5-minute pull-offs for a quick casual dinner before bedtime.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="tip-box">
+              <div class="tip-icon">🛏️</div>
+              <p><strong>Bedtime Timing:</strong> Arriving home around 6:00 PM – 6:15 PM leaves plenty of time for bath, dinner, and a peaceful on-time bedtime.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: Schedule Summary & Packing Checklist -->
+      <section class="slide" data-title="Master Schedule & Toolkit" data-time="Trip Toolkit">
+        <div class="slide-layout" style="grid-template-columns: 1.1fr 0.9fr;">
+          
+          <!-- Left: Complete Schedule Table -->
+          <div>
+            <div class="stop-meta">
+              <span class="meta-tag">Master Day Trip Schedule</span>
+              <span class="time-tag">📋 Quick Reference</span>
+            </div>
+            <h2 class="slide-title" style="margin-top: 8px; font-size: 1.6rem;">Saturday Schedule</h2>
+
+            <table class="itinerary-table">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Activity / Stop</th>
+                  <th>Key Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr onclick="goToSlide(1)" style="cursor: pointer;">
+                  <td><strong>9:30 AM</strong></td>
+                  <td>Depart Eden Prairie</td>
+                  <td>Drive US-169 S (~55m)</td>
+                </tr>
+                <tr onclick="goToSlide(2)" style="cursor: pointer;">
+                  <td><strong>10:25 AM</strong></td>
+                  <td>Minnesota Square Park</td>
+                  <td>Farmers Market, Playground, Restrooms</td>
+                </tr>
+                <tr onclick="goToSlide(3)" style="cursor: pointer;">
+                  <td><strong>11:40 AM</strong></td>
+                  <td>Glockenspiel & Lunch</td>
+                  <td>12:00 PM bells & Downtown cafes</td>
+                </tr>
+                <tr onclick="goToSlide(4)" style="cursor: pointer;">
+                  <td><strong>1:15 PM</strong></td>
+                  <td>Flandrau State Park</td>
+                  <td>Cottonwood River stroller nap walk</td>
+                </tr>
+                <tr onclick="goToSlide(5)" style="cursor: pointer;">
+                  <td><strong>2:45 PM</strong></td>
+                  <td>Schell's Brewery & Deer</td>
+                  <td>Paved gardens, peacocks, 1919 root beer</td>
+                </tr>
+                <tr onclick="goToSlide(6)" style="cursor: pointer;">
+                  <td><strong>3:50 PM</strong></td>
+                  <td>Hermann Heights Park</td>
+                  <td>102-ft monument, valley views, playground</td>
+                </tr>
+                <tr onclick="goToSlide(8)" style="cursor: pointer;">
+                  <td><strong>4:30 PM</strong></td>
+                  <td>Depart for Home</td>
+                  <td>Return to Eden Prairie (~85 mins)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Right: Interactive Packing Checklist -->
+          <div>
+            <div class="stop-meta">
+              <span class="meta-tag">Family Travel Toolkit</span>
+            </div>
+            <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 700; margin-top: 8px; color: #fff;">
+              🎒 Toddler Packing Checklist
+            </h3>
+
+            <div class="checklist-grid">
+              <div class="checklist-card">
+                <h4>🚼 Comfort & Stroller</h4>
+                <ul class="checklist-items">
+                  <li class="checklist-item"><label><input type="checkbox" checked> Stroller + sun shade</label></li>
+                  <li class="checklist-item"><label><input type="checkbox" checked> Lightweight nap blanket</label></li>
+                  <li class="checklist-item"><label><input type="checkbox" checked> Portable sound machine</label></li>
+                  <li class="checklist-item"><label><input type="checkbox"> Change of toddler clothes</label></li>
+                </ul>
+              </div>
+
+              <div class="checklist-card">
+                <h4>🍎 Food & Drinks</h4>
+                <ul class="checklist-items">
+                  <li class="checklist-item"><label><input type="checkbox" checked> Spill-proof water bottles</label></li>
+                  <li class="checklist-item"><label><input type="checkbox" checked> Toddler snack cups / pouches</label></li>
+                  <li class="checklist-item"><label><input type="checkbox"> Cash for farmers market</label></li>
+                  <li class="checklist-item"><label><input type="checkbox"> Wet wipes & hand sanitizer</label></li>
+                </ul>
+              </div>
+            </div>
+
+            <div style="margin-top: 16px; display: flex; gap: 10px;">
+              <button class="nav-btn primary" style="flex: 1; justify-content: center;" onclick="window.print()">
+                🖨 Print 1-Page Summary
+              </button>
+              <button class="nav-btn" style="flex: 1; justify-content: center;" onclick="goToSlide(0)">
+                🔄 Restart Presentation
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Bottom Slide Controls -->
+    <div class="bottom-nav">
+      <button class="nav-btn" id="prevBtn" onclick="prevSlide()">
+        ← Previous
+      </button>
+
+      <div class="nav-shortcuts">
+        <span>Use arrow keys <kbd>←</kbd> <kbd>→</kbd> or swipe to navigate</span>
+      </div>
+
+      <button class="nav-btn primary" id="nextBtn" onclick="nextSlide()">
+        Next Stop →
+      </button>
+    </div>
+  </main>
+
+  <!-- Overview Modal (All Slides Thumbnail Grid) -->
+  <div class="modal-backdrop" id="overviewModal" onclick="if(event.target===this) toggleOverviewModal()">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2>🗺️ All Trip Stops & Slides</h2>
+        <button class="btn-icon" onclick="toggleOverviewModal()">✕</button>
+      </div>
+      <div class="grid-thumbnails" id="overviewGrid">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Lightbox Modal for Full-Resolution Photo Zoom -->
+  <div class="lightbox-modal" id="lightboxModal" onclick="closeLightbox()">
+    <img id="lightboxImg" src="" alt="Enlarged photo view">
+  </div>
+
+  <script>
+    // State
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    let autoPlayTimer = null;
+    let audioCtx = null;
+
+    // Initialize UI
+    function init() {
+      renderProgressBar();
+      renderOverviewGrid();
+      updateSlideView();
+
+      // Keyboard navigation
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+          e.preventDefault();
+          nextSlide();
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+          e.preventDefault();
+          prevSlide();
+        } else if (e.key === 'Home') {
+          e.preventDefault();
+          goToSlide(0);
+        } else if (e.key === 'End') {
+          e.preventDefault();
+          goToSlide(totalSlides - 1);
+        } else if (e.key === 'o' || e.key === 'O') {
+          toggleOverviewModal();
+        } else if (e.key === 'f' || e.key === 'F') {
+          toggleFullscreen();
+        } else if (e.key === 'Escape') {
+          closeLightbox();
+          document.getElementById('overviewModal').classList.remove('open');
+        }
+      });
+
+      // Touch swipe support
+      let touchStartX = 0;
+      document.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+
+      document.addEventListener('touchend', (e) => {
+        const touchEndX = e.changedTouches[0].screenX;
+        const diff = touchEndX - touchStartX;
+        if (Math.abs(diff) > 50) {
+          if (diff < 0) nextSlide();
+          else prevSlide();
+        }
+      }, { passive: true });
+    }
+
+    // Render Progress Bar
+    function renderProgressBar() {
+      const bar = document.getElementById('progressBar');
+      bar.innerHTML = '';
+      slides.forEach((s, idx) => {
+        const step = document.createElement('div');
+        step.className = 'progress-step' + (idx === 0 ? ' active' : '');
+        step.title = `${s.dataset.time || ''}: ${s.dataset.title || 'Slide ' + (idx + 1)}`;
+        step.onclick = () => goToSlide(idx);
+        bar.appendChild(step);
+      });
+    }
+
+    // Render Overview Thumbnails
+    function renderOverviewGrid() {
+      const grid = document.getElementById('overviewGrid');
+      grid.innerHTML = '';
+      slides.forEach((s, idx) => {
+        const card = document.createElement('div');
+        card.className = 'thumb-card' + (idx === 0 ? ' active' : '');
+        card.onclick = () => {
+          goToSlide(idx);
+          toggleOverviewModal();
+        };
+
+        const img = s.querySelector('.media-card img, .cover-photo img') || { src: 'new_ulm_presentation_assets/images/hermann_monument.jpg' };
+        
+        card.innerHTML = `
+          <img class="thumb-img" src="${img.src}" alt="${s.dataset.title}">
+          <div class="thumb-content">
+            <div class="thumb-time">${s.dataset.time || 'Stop ' + idx}</div>
+            <div class="thumb-title">${s.dataset.title || 'Stop'}</div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // Navigation Controls
+    function updateSlideView() {
+      slides.forEach((s, idx) => {
+        s.classList.toggle('active', idx === currentSlide);
+      });
+
+      // Update progress bar
+      const steps = document.querySelectorAll('.progress-step');
+      steps.forEach((st, idx) => {
+        st.classList.remove('active', 'completed');
+        if (idx === currentSlide) st.classList.add('active');
+        else if (idx < currentSlide) st.classList.add('completed');
+      });
+
+      // Update overview thumbnails
+      const thumbs = document.querySelectorAll('.thumb-card');
+      thumbs.forEach((th, idx) => {
+        th.classList.toggle('active', idx === currentSlide);
+      });
+
+      // Update Prev / Next button states
+      document.getElementById('prevBtn').disabled = currentSlide === 0;
+      document.getElementById('prevBtn').style.opacity = currentSlide === 0 ? '0.4' : '1';
+      
+      const nextBtn = document.getElementById('nextBtn');
+      if (currentSlide === totalSlides - 1) {
+        nextBtn.innerHTML = '🔄 Restart';
+      } else {
+        nextBtn.innerHTML = 'Next Stop →';
+      }
+    }
+
+    function goToSlide(index) {
+      currentSlide = Math.max(0, Math.min(index, totalSlides - 1));
+      updateSlideView();
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+      } else {
+        currentSlide = 0;
+      }
+      updateSlideView();
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlideView();
+      }
+    }
+
+    // Photo Switcher Tabs
+    function switchPhoto(imgId, capId, newSrc, newCaption, tabElement) {
+      const img = document.getElementById(imgId);
+      const cap = document.getElementById(capId);
+      if (img) img.src = newSrc;
+      if (cap) cap.innerText = newCaption;
+
+      // Update active tab in the row
+      const parent = tabElement.parentElement;
+      parent.querySelectorAll('.photo-tab').forEach(t => t.classList.remove('active'));
+      tabElement.classList.add('active');
+    }
+
+    // Lightbox Zoom
+    function openLightbox(src) {
+      const lb = document.getElementById('lightboxModal');
+      const img = document.getElementById('lightboxImg');
+      img.src = src;
+      lb.classList.add('open');
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightboxModal').classList.remove('open');
+    }
+
+    // Overview Grid Modal
+    function toggleOverviewModal() {
+      const modal = document.getElementById('overviewModal');
+      modal.classList.toggle('open');
+    }
+
+    // Fullscreen Toggle
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => console.log(err));
+      } else {
+        document.exitFullscreen().catch(err => console.log(err));
+      }
+    }
+
+    // Auto Play Slideshow
+    function toggleAutoPlay() {
+      const btn = document.getElementById('autoPlayBtn');
+      if (autoPlayTimer) {
+        clearInterval(autoPlayTimer);
+        autoPlayTimer = null;
+        btn.classList.remove('active');
+        btn.innerHTML = '▶';
+      } else {
+        btn.classList.add('active');
+        btn.innerHTML = '⏸';
+        autoPlayTimer = setInterval(() => {
+          nextSlide();
+        }, 7000);
+      }
+    }
+
+    // Synthetic Westminster Chime Generator (Web Audio API)
+    function playGlockenspielChime() {
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+
+        // Westminster Quarters 4-note chime sequence (E4, C4, D4, G3)
+        const notes = [
+          { freq: 329.63, time: 0 },    // E4
+          { freq: 261.63, time: 0.6 },  // C4
+          { freq: 293.66, time: 1.2 },  // D4
+          { freq: 196.00, time: 1.8 },  // G3
+          { freq: 329.63, time: 2.7 }   // Sustained chime
+        ];
+
+        const now = audioCtx.currentTime;
+
+        notes.forEach(n => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(n.freq, now + n.time);
+
+          // Bell chime envelope: fast attack, exponential decay with gentle ring
+          gain.gain.setValueAtTime(0, now + n.time);
+          gain.gain.linearRampToValueAtTime(0.4, now + n.time + 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + n.time + 1.6);
+
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          osc.start(now + n.time);
+          osc.stop(now + n.time + 1.8);
+        });
+
+        // Visual feedback on the button
+        const btn = document.getElementById('chimeBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '🎶 <span>Chiming...</span>';
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+        }, 3600);
+
+      } catch (e) {
+        console.log('Audio chime error:', e);
+      }
+    }
+
+    // Run Init
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
