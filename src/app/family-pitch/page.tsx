@@ -940,16 +940,16 @@ export default function FamilyPitchDeckPage() {
           {/* Column 1: The School Bus Problem */}
           <div className="bg-slate-50 border border-slate-200 rounded-3xl p-5 space-y-3 h-[360px] flex flex-col justify-between">
             <div className="space-y-2">
-              <span className="text-[10px] font-black uppercase text-amber-700 bg-amber-100 px-3 py-1 rounded-full flex items-center gap-1.5 w-fit">
+              <span className="text-xs font-black uppercase text-amber-700 bg-amber-100 px-3 py-1 rounded-full flex items-center gap-1.5 w-fit">
                 <Bus className="w-3.5 h-3.5" />
                 <span>The Pain Point</span>
               </span>
               <div className="text-lg font-black text-slate-900">"Where's the Bus?" Panic</div>
-              <p className="text-slate-600 text-[11px] leading-relaxed">
+              <p className="text-slate-600 text-xs leading-relaxed">
                 School front desks get flooded with frantic morning phone calls when buses run late in traffic or snow. Legacy district dispatch tools have clunky, outdated parent portals (1.5-star App Store ratings).
               </p>
             </div>
-            <div className="space-y-1 text-[11px] text-slate-700 border-t border-slate-200 pt-3">
+            <div className="space-y-1 text-xs text-slate-700 border-t border-slate-200 pt-3">
               <div className="flex items-center gap-1.5 text-red-600">✗ <span>80+ panic calls per school morning</span></div>
               <div className="flex items-center gap-1.5 text-red-600">✗ <span>Kids waiting in sub-zero weather</span></div>
             </div>
@@ -958,16 +958,16 @@ export default function FamilyPitchDeckPage() {
           {/* Column 2: The Modern Overlay Solution */}
           <div className="bg-emerald-50/80 border-2 border-emerald-300 rounded-3xl p-5 space-y-3 h-[360px] flex flex-col justify-between shadow-sm">
             <div className="space-y-2">
-              <span className="text-[10px] font-black uppercase text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full flex items-center gap-1.5 w-fit">
+              <span className="text-xs font-black uppercase text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full flex items-center gap-1.5 w-fit">
                 <Zap className="w-3.5 h-3.5" />
                 <span>Our Solution</span>
               </span>
               <div className="text-lg font-black text-emerald-900">Instant Geofenced Alerts</div>
-              <p className="text-emerald-950 text-[11px] leading-relaxed">
+              <p className="text-emerald-950 text-xs leading-relaxed">
                 Parents receive SMS alerts (*"Bus #14 is 3 stops away (~5 min)"*), 1-tap "Not riding today" no-show logging, and automated `.ics` calendar sync for 2-hr weather delays and late-start days.
               </p>
             </div>
-            <div className="space-y-1 text-[11px] text-emerald-950 border-t border-emerald-200 pt-3">
+            <div className="space-y-1 text-xs text-emerald-950 border-t border-emerald-200 pt-3">
               <div className="flex items-center gap-1.5 text-emerald-700 font-semibold">✓ <span>No App Store passwords required</span></div>
               <div className="flex items-center gap-1.5 text-emerald-700 font-semibold">✓ <span>Dynamic late-start calendar sync</span></div>
             </div>
@@ -976,21 +976,21 @@ export default function FamilyPitchDeckPage() {
           {/* Column 3: Business Model & Go-to-Market */}
           <div className="bg-slate-50 border border-slate-200 rounded-3xl p-5 space-y-3 h-[360px] flex flex-col justify-between">
             <div className="space-y-2">
-              <span className="text-[10px] font-black uppercase text-blue-700 bg-blue-100 px-3 py-1 rounded-full flex items-center gap-1.5 w-fit">
+              <span className="text-xs font-black uppercase text-blue-700 bg-blue-100 px-3 py-1 rounded-full flex items-center gap-1.5 w-fit">
                 <GraduationCap className="w-3.5 h-3.5" />
                 <span>Go-to-Market</span>
               </span>
               <div className="text-lg font-black text-slate-900">Private & Fleet Entry</div>
-              <p className="text-slate-600 text-[11px] leading-relaxed">
+              <p className="text-slate-600 text-xs leading-relaxed">
                 <strong>Beachhead:</strong> Private/independent schools (fast sales, no RFP bureaucracy) & contracted bus fleet operators. Plus courtesy busing & field trip micro-payments via Apple Pay.
               </p>
             </div>
-            <div className="bg-slate-900 text-slate-200 p-2.5 rounded-2xl text-[11px] font-medium space-y-1">
+            <div className="bg-slate-900 text-slate-200 p-2.5 rounded-2xl text-xs font-medium space-y-1">
               <div className="text-amber-400 font-bold flex items-center gap-1">
                 <Sparkles className="w-3 h-3" />
                 <span>90%+ Code Reuse</span>
               </div>
-              <p className="text-[10px] text-slate-400">Same PWA UI, Twilio SMS engine, and Stripe/Apple Pay stack.</p>
+              <p className="text-xs text-slate-400">Same PWA UI, Twilio SMS engine, and Stripe/Apple Pay stack.</p>
             </div>
           </div>
         </div>
@@ -1008,16 +1008,16 @@ export default function FamilyPitchDeckPage() {
           {/* Column 1: The Patient Billing Disaster */}
           <div className="bg-slate-50 border border-slate-200 rounded-3xl p-5 space-y-3 h-[360px] flex flex-col justify-between">
             <div className="space-y-2">
-              <span className="text-[10px] font-black uppercase text-rose-700 bg-rose-100 px-3 py-1 rounded-full flex items-center gap-1.5 w-fit">
+              <span className="text-xs font-black uppercase text-rose-700 bg-rose-100 px-3 py-1 rounded-full flex items-center gap-1.5 w-fit">
                 <AlertCircle className="w-3.5 h-3.5" />
                 <span>The Patient Pain Point</span>
               </span>
               <div className="text-lg font-black text-slate-900">The Paper Statement Black Hole</div>
-              <p className="text-slate-600 text-[11px] leading-relaxed">
+              <p className="text-slate-600 text-xs leading-relaxed">
                 After insurance pays, clinics (e.g. Southdale Pediatrics, dental & maxillofacial centers) mail paper bills with confusing "Guarantor #", "Web ID", and 8-digit codes. Patients lose the paper or abandon clunky patient portal logins.
               </p>
             </div>
-            <div className="space-y-1 text-[11px] text-slate-700 border-t border-slate-200 pt-3">
+            <div className="space-y-1 text-xs text-slate-700 border-t border-slate-200 pt-3">
               <div className="flex items-center gap-1.5 text-rose-600 font-semibold">✗ <span>60%+ of $30–$250 bills hit 90-day aging</span></div>
               <div className="flex items-center gap-1.5 text-rose-600 font-semibold">✗ <span>$1.50/statement + endless office phone tag</span></div>
             </div>
@@ -1026,16 +1026,16 @@ export default function FamilyPitchDeckPage() {
           {/* Column 2: The 1-Tap MedPay Solution */}
           <div className="bg-emerald-50/80 border-2 border-emerald-300 rounded-3xl p-5 space-y-3 h-[360px] flex flex-col justify-between shadow-sm">
             <div className="space-y-2">
-              <span className="text-[10px] font-black uppercase text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full flex items-center gap-1.5 w-fit">
+              <span className="text-xs font-black uppercase text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full flex items-center gap-1.5 w-fit">
                 <Stethoscope className="w-3.5 h-3.5" />
                 <span>1-Tap MedPay Solution</span>
               </span>
               <div className="text-lg font-black text-emerald-900">SMS + FaceID Apple Pay</div>
-              <p className="text-emerald-950 text-[11px] leading-relaxed">
+              <p className="text-emerald-950 text-xs leading-relaxed">
                 Parents receive a secure SMS: <em>"Southdale Pediatrics: Balance for Emily’s well-check ($45.00). Tap to settle."</em> Tap link ➔ <strong>1-Tap Apple Pay (FaceID in 2 sec)</strong> with <strong>HSA/FSA health card</strong> support & instant Wallet receipt.
               </p>
             </div>
-            <div className="space-y-1 text-[11px] text-emerald-950 border-t border-emerald-200 pt-3">
+            <div className="space-y-1 text-xs text-emerald-950 border-t border-emerald-200 pt-3">
               <div className="flex items-center gap-1.5 text-emerald-700 font-semibold">✓ <span>No patient portal password or registration</span></div>
               <div className="flex items-center gap-1.5 text-emerald-700 font-semibold">✓ <span>HSA/FSA cards + 48-hr cash settlement</span></div>
             </div>
@@ -1044,22 +1044,22 @@ export default function FamilyPitchDeckPage() {
           {/* Column 3: Family Strategic Advantage */}
           <div className="bg-slate-50 border border-slate-200 rounded-3xl p-5 space-y-3 h-[360px] flex flex-col justify-between">
             <div className="space-y-2">
-              <span className="text-[10px] font-black uppercase text-blue-700 bg-blue-100 px-3 py-1 rounded-full flex items-center gap-1.5 w-fit">
+              <span className="text-xs font-black uppercase text-blue-700 bg-blue-100 px-3 py-1 rounded-full flex items-center gap-1.5 w-fit">
                 <HeartHandshake className="w-3.5 h-3.5" />
                 <span>Unfair Family Moat</span>
               </span>
               <div className="text-lg font-black text-slate-900">Warm Beachheads & Authority</div>
-              <p className="text-slate-600 text-[11px] leading-relaxed">
+              <p className="text-slate-600 text-xs leading-relaxed">
                 <strong>Physician Wife Credibility:</strong> Instant clinical trust. <br />
                 <strong>Brother-in-Law (Maxillofacial Surgery Center):</strong> Warm pilot design partner for surgical/dental billing workflows (Dentrix/Nextech).
               </p>
             </div>
-            <div className="bg-slate-900 text-slate-200 p-2.5 rounded-2xl text-[11px] font-medium space-y-1">
+            <div className="bg-slate-900 text-slate-200 p-2.5 rounded-2xl text-xs font-medium space-y-1">
               <div className="text-emerald-400 font-bold flex items-center gap-1">
                 <DollarSign className="w-3 h-3" />
                 <span>$250–$500/mo SaaS / Clinic</span>
               </div>
-              <p className="text-[10px] text-slate-400">10 private clinics = $30k–$60k ARR in high-margin healthcare SaaS.</p>
+              <p className="text-xs text-slate-400">10 private clinics = $30k–$60k ARR in high-margin healthcare SaaS.</p>
             </div>
           </div>
         </div>
@@ -1125,7 +1125,7 @@ export default function FamilyPitchDeckPage() {
           {/* Top Slide Header */}
           <div className="p-7 pb-3 border-b border-slate-100 flex items-start justify-between flex-shrink-0">
             <div className="space-y-0.5">
-              <span className="text-[10px] font-black uppercase tracking-wider text-[#7A1900] bg-red-50 px-3 py-1 rounded-full">
+              <span className="text-xs font-black uppercase tracking-wider text-[#7A1900] bg-red-50 px-3 py-1 rounded-full">
                 {current.category}
               </span>
               <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">

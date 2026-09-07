@@ -1,8 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
-import { X, Check, CreditCard, Lock, ShieldCheck, Sparkles, Smartphone, ArrowRight, Loader2 } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import {
+  X,
+  Check,
+  CreditCard,
+  Lock,
+  ShieldCheck,
+  Smartphone,
+  Loader2,
+  Sparkles,
+} from "lucide-react";
 import confetti from "canvas-confetti";
+import { Elements } from "@stripe/react-stripe-js";
+import { getStripe } from "@/lib/stripe";
+import { StripeLivePayment } from "./StripeLivePayment";
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -21,8 +33,13 @@ export function PaymentModal({ isOpen, onClose, amount, onSuccess }: PaymentModa
   const [isProcessing, setIsProcessing] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
 
+  // Stripe State
+  const [stripePromise, setStripePromise] = useState<ReturnType<typeof getStripe> | null>(null);
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [isStripeConfigured, setIsStripeConfigured] = useState<boolean>(false);
+
   // Detect user's device/browser ecosystem
-  React.useEffect(() => {
+  useEffect(() => {
     if (typeof window !== "undefined") {
       const ua = navigator.userAgent || "";
       const isApple = /Macintosh|Mac OS X|iPhone|iPad|iPod/i.test(ua) && !/Android/i.test(ua);
@@ -36,12 +53,35 @@ export function PaymentModal({ isOpen, onClose, amount, onSuccess }: PaymentModa
     }
   }, [isOpen]);
 
+  // Query API to initialize Stripe PaymentIntent or confirm demo mode
+  useEffect(() => {
+    if (isOpen) {
+      const sp = getStripe();
+      setStripePromise(sp);
+
+      fetch("/api/create-payment-intent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.configured && data.clientSecret) {
+            setClientSecret(data.clientSecret);
+            setIsStripeConfigured(true);
+          } else {
+            setIsStripeConfigured(false);
+          }
+        })
+        .catch(() => {
+          setIsStripeConfigured(false);
+        });
+    }
+  }, [isOpen, amount]);
+
   if (!isOpen) return null;
 
-  const handlePay = async (methodName: string) => {
-    setIsProcessing(true);
-    // Simulate payment API delay
-    await new Promise((resolve) => setTimeout(resolve, 1200));
+  const handlePaymentSuccess = () => {
     setIsProcessing(false);
     setIsCompleted(true);
 
@@ -57,7 +97,21 @@ export function PaymentModal({ isOpen, onClose, amount, onSuccess }: PaymentModa
       onSuccess();
       onClose();
       setIsCompleted(false);
-    }, 1500);
+    }, 1600);
+  };
+
+  const handleSimulatedPay = async (methodName: string) => {
+    setIsProcessing(true);
+    // Simulate payment API delay
+    await new Promise((resolve) => setTimeout(resolve, 1100));
+    handlePaymentSuccess();
+  };
+
+  const handleAutofillTestCard = () => {
+    setCardNumber("4242 4242 4242 4242");
+    setCardExp("12/28");
+    setCardCvv("123");
+    setCardName("Patrick Badley");
   };
 
   return (
@@ -109,7 +163,7 @@ export function PaymentModal({ isOpen, onClose, amount, onSuccess }: PaymentModa
               </div>
             </div>
 
-            {/* Payment Method Selector (Adapts automatically to Apple vs Google device) */}
+            {/* Payment Method Selector */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-bold uppercase tracking-wider text-slate-600">
@@ -117,14 +171,14 @@ export function PaymentModal({ isOpen, onClose, amount, onSuccess }: PaymentModa
                 </label>
                 {/* Demo device simulator toggle */}
                 <div className="flex items-center gap-1.5 text-xs">
-                  <span className="text-slate-400">Preview:</span>
+                  <span className="text-slate-400">Device:</span>
                   <button
                     type="button"
                     onClick={() => {
                       setPlatform("apple");
                       setPaymentMethod("apple");
                     }}
-                    className={`px-2 py-0.5 rounded-md ${
+                    className={`px-2 py-0.5 rounded-md transition-colors ${
                       platform === "apple" ? "bg-black text-white font-bold" : "text-slate-500 hover:text-slate-900"
                     }`}
                   >
@@ -136,7 +190,7 @@ export function PaymentModal({ isOpen, onClose, amount, onSuccess }: PaymentModa
                       setPlatform("google");
                       setPaymentMethod("google");
                     }}
-                    className={`px-2 py-0.5 rounded-md ${
+                    className={`px-2 py-0.5 rounded-md transition-colors ${
                       platform === "google" ? "bg-blue-600 text-white font-bold" : "text-slate-500 hover:text-slate-900"
                     }`}
                   >
@@ -157,7 +211,7 @@ export function PaymentModal({ isOpen, onClose, amount, onSuccess }: PaymentModa
                     }`}
                   >
                     <span className="text-base font-black">Pay</span>
-                    <span className="text-xs opacity-80">(FaceID)</span>
+                    <span className="text-xs opacity-80">(1-Tap)</span>
                   </button>
                 ) : (
                   <button
@@ -189,22 +243,35 @@ export function PaymentModal({ isOpen, onClose, amount, onSuccess }: PaymentModa
               </div>
             </div>
 
-            {/* Apple Pay Form View */}
+            {/* Apple Pay View */}
             {paymentMethod === "apple" && (
-              <div className="space-y-4 pt-1">
-                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-sm text-slate-700 flex items-center gap-3">
-                  <Smartphone className="w-6 h-6 text-slate-900 flex-shrink-0" />
-                  <div>
-                    <p className="font-bold text-slate-900">Apple Pay Ready</p>
-                    <p className="text-xs text-slate-500 font-medium">Pay using your saved Apple Wallet card (Visa •••• 4012)</p>
+              <div className="space-y-3 pt-1">
+                {isStripeConfigured && clientSecret && stripePromise ? (
+                  <Elements stripe={stripePromise} options={{ clientSecret }}>
+                    <StripeLivePayment
+                      amount={amount}
+                      clientSecret={clientSecret}
+                      onSuccess={handlePaymentSuccess}
+                      setIsProcessing={setIsProcessing}
+                    />
+                  </Elements>
+                ) : (
+                  <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-sm text-slate-700 flex items-center gap-3">
+                    <Smartphone className="w-6 h-6 text-slate-900 flex-shrink-0" />
+                    <div>
+                      <p className="font-bold text-slate-900">Apple Pay Ready</p>
+                      <p className="text-xs text-slate-500 font-medium">
+                        Pay with your saved Apple Wallet card (Visa •••• 4012)
+                      </p>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <button
                   type="button"
                   disabled={isProcessing}
-                  onClick={() => handlePay("Apple Pay")}
-                  className="w-full bg-black hover:bg-neutral-800 text-white py-4 rounded-2xl font-bold text-base shadow-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50"
+                  onClick={() => handleSimulatedPay("Apple Pay")}
+                  className="w-full bg-black hover:bg-neutral-800 text-white py-3.5 rounded-2xl font-bold text-base shadow-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50"
                 >
                   {isProcessing ? (
                     <>
@@ -218,24 +285,60 @@ export function PaymentModal({ isOpen, onClose, amount, onSuccess }: PaymentModa
                     </>
                   )}
                 </button>
+
+                {!isStripeConfigured && (
+                  <div className="text-center">
+                    <span className="text-[11px] text-slate-400">
+                      Running in interactive simulation mode • Stripe keys in <code className="font-mono">.env.local</code>
+                    </span>
+                  </div>
+                )}
               </div>
             )}
 
-            {/* Google Pay Form View */}
+            {/* Google Pay View */}
             {paymentMethod === "google" && (
-              <div className="space-y-4 pt-1">
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-xs text-slate-600 flex items-center gap-3">
-                  <Smartphone className="w-5 h-5 text-blue-600 flex-shrink-0" />
-                  <div>
-                    <p className="font-semibold text-slate-900">Google Pay Ready</p>
-                    <p className="text-xs text-slate-500">Fast checkout with your Google Account</p>
-                  </div>
+              <div className="space-y-3 pt-1">
+                {/* Engine Mode Pill */}
+                <div className="flex items-center justify-between px-1 text-xs">
+                  <span className="font-semibold text-slate-500 text-[11px] uppercase tracking-wider">Gateway</span>
+                  {isStripeConfigured ? (
+                    <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      Stripe Test Mode Active
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                      Interactive Demo Mode
+                    </span>
+                  )}
                 </div>
 
+                {isStripeConfigured && clientSecret && stripePromise ? (
+                  <Elements stripe={stripePromise} options={{ clientSecret }}>
+                    <StripeLivePayment
+                      amount={amount}
+                      clientSecret={clientSecret}
+                      onSuccess={handlePaymentSuccess}
+                      setIsProcessing={setIsProcessing}
+                    />
+                  </Elements>
+                ) : (
+                  <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-xs text-slate-600 flex items-center gap-3">
+                    <Smartphone className="w-5 h-5 text-blue-600 flex-shrink-0" />
+                    <div>
+                      <p className="font-semibold text-slate-900">Google Pay Ready</p>
+                      <p className="text-[11px] text-slate-500">Fast 1-tap checkout with your Google Wallet</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* 1-Tap Google Pay Button (Simulated / Fallback) */}
                 <button
                   type="button"
                   disabled={isProcessing}
-                  onClick={() => handlePay("Google Pay")}
+                  onClick={() => handleSimulatedPay("Google Pay")}
                   className="w-full bg-slate-900 hover:bg-black text-white py-3.5 rounded-2xl font-bold text-base shadow-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50"
                 >
                   {isProcessing ? (
@@ -250,6 +353,12 @@ export function PaymentModal({ isOpen, onClose, amount, onSuccess }: PaymentModa
                     </>
                   )}
                 </button>
+
+                {!isStripeConfigured && (
+                  <p className="text-[11px] text-center text-slate-400">
+                    Add your test keys in <code className="text-slate-600 font-mono">.env.local</code> to activate live Stripe Google Pay tokens.
+                  </p>
+                )}
               </div>
             )}
 
@@ -260,25 +369,35 @@ export function PaymentModal({ isOpen, onClose, amount, onSuccess }: PaymentModa
                 method="post"
                 onSubmit={(e) => {
                   e.preventDefault();
-                  handlePay("Credit Card");
+                  handleSimulatedPay("Credit Card");
                 }}
                 className="space-y-3 pt-1"
               >
-                <div>
-                  <label htmlFor="cc-name" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                <div className="flex items-center justify-between">
+                  <label htmlFor="cc-name" className="block text-xs font-bold uppercase tracking-wider text-slate-700">
                     Name on Card
                   </label>
+                  <button
+                    type="button"
+                    onClick={handleAutofillTestCard}
+                    className="text-[11px] text-[#7A1900] hover:underline font-bold flex items-center gap-1"
+                  >
+                    <Sparkles className="w-3 h-3" />
+                    Autofill Test Card
+                  </button>
+                </div>
+
+                <div>
                   <input
                     id="cc-name"
                     name="ccname"
                     type="text"
                     autoComplete="cc-name"
-                    enterKeyHint="next"
                     required
                     value={cardName}
                     onChange={(e) => setCardName(e.target.value)}
                     placeholder="Patrick Badley"
-                    className="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#7A1900]"
+                    className="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#7A1900]"
                   />
                 </div>
 
@@ -293,15 +412,14 @@ export function PaymentModal({ isOpen, onClose, amount, onSuccess }: PaymentModa
                       type="text"
                       autoComplete="cc-number"
                       inputMode="numeric"
-                      enterKeyHint="next"
                       required
                       maxLength={19}
                       value={cardNumber}
                       onChange={(e) => setCardNumber(e.target.value)}
-                      placeholder="4000 1234 5678 9010"
-                      className="w-full pl-10 pr-3.5 py-2.5 border border-slate-300 rounded-xl text-base font-mono focus:outline-none focus:ring-2 focus:ring-[#7A1900]"
+                      placeholder="4242 4242 4242 4242"
+                      className="w-full pl-10 pr-3.5 py-2.5 border border-slate-300 rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#7A1900]"
                     />
-                    <CreditCard className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5 pointer-events-none" />
+                    <CreditCard className="w-4 h-4 text-slate-400 absolute left-3.5 top-3 pointer-events-none" />
                   </div>
                 </div>
 
@@ -316,13 +434,12 @@ export function PaymentModal({ isOpen, onClose, amount, onSuccess }: PaymentModa
                       type="text"
                       autoComplete="cc-exp"
                       inputMode="numeric"
-                      enterKeyHint="next"
                       required
                       maxLength={5}
                       value={cardExp}
                       onChange={(e) => setCardExp(e.target.value)}
                       placeholder="MM/YY"
-                      className="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-base font-mono focus:outline-none focus:ring-2 focus:ring-[#7A1900]"
+                      className="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#7A1900]"
                     />
                   </div>
                   <div>
@@ -335,13 +452,12 @@ export function PaymentModal({ isOpen, onClose, amount, onSuccess }: PaymentModa
                       type="text"
                       autoComplete="cc-csc"
                       inputMode="numeric"
-                      enterKeyHint="done"
                       required
                       maxLength={4}
                       value={cardCvv}
                       onChange={(e) => setCardCvv(e.target.value)}
                       placeholder="123"
-                      className="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-base font-mono focus:outline-none focus:ring-2 focus:ring-[#7A1900]"
+                      className="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#7A1900]"
                     />
                   </div>
                 </div>
