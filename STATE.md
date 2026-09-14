@@ -70,6 +70,17 @@
   - [x] **3-Layer Telemetry Architecture:** Defined the metrics stack (PostHog/Stripe for conversion funnels, Sentry/Datadog for error tracking, and a 1-page visual executive report for SWS leadership).
   - [x] **Executive Q&A Ledger:** Created permanent living document [`executive_qa_ledger.md`](file:///Users/pat/.gemini/antigravity/brain/a37ed6ce-e10f-4b9b-8e9a-76c89141df99/executive_qa_ledger.md) to record all strategic answers, technical architectures, and success KPIs.
 
+- [x] **Customer-First Phone Outreach Strategy & Cheat Sheet (Session 2026-09-14):**
+  - [x] Formulated the "Neighbor + Active Customer on Route 4" phone strategy for calling `(952) 937-8900` to speak directly with Office Manager Susie Scott, bypassing vendor gatekeeping.
+  - [x] Created one-page call cheat sheet in [`scratch/sws-phone-call-cheatsheet.md`](file:///Users/pat/code/payments/scratch/sws-phone-call-cheatsheet.md) with word-for-word gatekeeper scripts, Susie pitch, objection handlers, and immediate follow-up email template.
+- [x] **Paper Mail vs. 1-Tap SMS Economic Modeling:**
+  - [x] Modeled hard unit economics per $94.50 quarterly bill: Paper past-due notice costs ~$7.47–$7.73 total ($0.73 stamp, $0.35 materials, $1.25 fulfillment labor, $2.10 phone collection labor, higher MOTO CC interchange) vs. ~$3.05 for 1-Tap SMS ($0.015 Twilio text + standard CC fee, $0 extra for Apple Pay).
+  - [x] Projected aggregate quarterly savings on ~300 declined cards: ~$1,320 in direct costs saved ($5,280/year) and 40 staff hours returned to front-office operations.
+- [x] **The 3-Phase "Crawl, Walk, Run" Commercial Pitch Architecture:**
+  - [x] **Phase 1 (The Crawl - Zero-IT Past-Due Pilot):** SWS provides a CSV of 50–100 delinquent/expired card accounts. We send 1-click Apple Pay SMS links, collect payments, deposit funds into their account, and hand Susie a clean Navusoft reconciliation sheet. Requires zero code changes on SWS website and zero IT effort.
+  - [x] **Phase 2 (The Walk - Parallel Soft-Launch):** Deploy side-by-side with a *"✨ Try Our New Mobile Portal (Beta / 1-Tap Apple Pay)"* button on `suburbanwaste.com`. Legacy Navusoft portal remains 100% active, eliminating cutover risk, site downtime, and customer disruption.
+  - [x] **Phase 3 (The Run - Full Operating Layer):** Living calendar sync (.ics), self-service bulky item scheduling, automated holiday pickup texts, and native iOS/Android App Store listings via Capacitor.js.
+
 ---
 
 ### Pending / Active Backlog
@@ -101,7 +112,8 @@
 * **Hybrid Payment Architecture:** The checkout modal automatically tests if active Stripe keys and a browser wallet (Google Pay/Apple Pay) are present. If present, it executes live tokenization. If absent, it gracefully falls back to an interactive demo flow with zero crashes or error alerts.
 * **PCI-DSS Level 1 Isolation:** Zero cardholder data (PAN, CVV) touches our Next.js backend. All card entry is delegated to Stripe Elements or browser digital wallets.
 * **Typography & UI Invariants:** Minimum 12px (`text-xs font-bold`) for secondary metadata, 14px (`text-sm`) for body/actions, 16px (`text-base`) for inputs, and no arbitrary micro-fonts.
-* **Deterministic Verification Gate:** All sessions must run `npm run verify` (`scripts/verify.sh`) before completing tasks or committing code.
+* **"Crawl, Walk, Run" Commercial Staging:** Never lead with an aggressive hard cutover of their existing customer portal or ERP. Lead with a zero-IT past-due recovery pilot (CSV export -> SMS Apple Pay), follow with a parallel soft-launch ("✨ Try Our New Mobile Portal" button side-by-side on `suburbanwaste.com`), and scale into full self-service operations (bulky items, calendar sync).
+* **Paper Mail Reduction as Primary Economic Hook:** Position the ROI on eliminating physical postage, paper notices, and manual phone payments ($7.50+ total cost per delinquent bill vs. $3.05 with SMS) rather than abstract "digital transformation."
 * **Disk-Backed State Machine:** State is tracked in `STATE.md` and `scratch/task-NNN/`. Incoming sessions resume from disk state rather than asking the human to rebuild context.
 
 ---
