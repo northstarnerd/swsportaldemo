@@ -55,6 +55,21 @@
   - [x] Evaluated multi-company deployment topology (5 separate repos vs. 5 separate deployments vs. Single-Repo Multi-Tenant SaaS).
   - [x] Adopted Multi-Tenant SaaS strategy: single repository, dynamic tenant branding via Next.js middleware (subdomains/custom domains), Postgres RLS for data isolation, and Stripe Connect for multi-merchant fund distribution.
 
+- [x] **Executive Presentation & Customer Case Study Polish (Session 2026-09-14):**
+  - [x] **Respectful "Complement & Enhance" Pitch Architecture:** Refactored `/pitch` to position our platform as a modern mobile front-door that complements and maximizes the ROI of SWS's core Navusoft ERP rather than adversarial replacement.
+  - [x] **Jargon Elimination:** Replaced financial industry jargon ("Automated SMS Dunning") with clear, consumer-friendly terminology ("1-Click SMS Card Recovery").
+  - [x] **Widescreen Slide Stage:** Expanded `/pitch` to an 1100px × 620px widescreen canvas with a fixed 420px internal stage height, completely eliminating dimensional shifts and jumping during slide navigation.
+  - [x] **Case Study Modal Upgrade (`StoryComparisonModal.tsx`):**
+    - [x] Softened tone to focus on the authentic resident experience without unverified assertions; labeled phone call volume as an explicit assumption.
+    - [x] Accurately documented the multi-step stacked popup checkout flow ("Add Wallet" Screen 1 asks for Card Type & Name before Screen 2 asks for card numbers).
+    - [x] Cropped and embedded the verified SWS resident account screenshot (`public/navusoft-modal-cropped.png`).
+    - [x] Replaced overflowing horizontal slider with a clean 4-step segmented pill grid (zero mid-slide scrollbars).
+    - [x] Expanded modal layout to 4XL (`max-w-4xl`, 620px height) with spacious typography.
+  - [x] **The 30-Day Risk-Free Past-Due Recovery Pilot:** Established the "Option 2" pilot strategy as the primary closing hook (targeting only the ~300 declined quarterly cards with 1-click SMS recovery, carrying zero operational risk for SWS).
+  - [x] **Mobile App Roadmap & Packaging:** Evaluated and documented the 1–2 week Capacitor.js native wrapper roadmap for official Apple App Store and Google Play Store listings.
+  - [x] **3-Layer Telemetry Architecture:** Defined the metrics stack (PostHog/Stripe for conversion funnels, Sentry/Datadog for error tracking, and a 1-page visual executive report for SWS leadership).
+  - [x] **Executive Q&A Ledger:** Created permanent living document [`executive_qa_ledger.md`](file:///Users/pat/.gemini/antigravity/brain/a37ed6ce-e10f-4b9b-8e9a-76c89141df99/executive_qa_ledger.md) to record all strategic answers, technical architectures, and success KPIs.
+
 ---
 
 ### Pending / Active Backlog
