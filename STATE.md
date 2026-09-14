@@ -50,9 +50,18 @@
   - [x] Created deterministic backpressure quality gate in `scripts/verify.sh` (`npm run verify`).
   - [x] Created `scratch/` workspace for multi-session task tracking.
 
+- [x] **Productionalization & Multi-Tenant Architecture Blueprint (Session 2026-09-14):**
+  - [x] Evaluated production infrastructure stack: Next.js on Vercel ($20/mo Pro baseline, ~$20–$65/mo total stack including managed PostgreSQL/Supabase, Twilio SMS, Resend email).
+  - [x] Evaluated multi-company deployment topology (5 separate repos vs. 5 separate deployments vs. Single-Repo Multi-Tenant SaaS).
+  - [x] Adopted Multi-Tenant SaaS strategy: single repository, dynamic tenant branding via Next.js middleware (subdomains/custom domains), Postgres RLS for data isolation, and Stripe Connect for multi-merchant fund distribution.
+
 ---
 
 ### Pending / Active Backlog
+- [ ] **Multi-Tenant SaaS Foundation:**
+  - [ ] Next.js middleware for tenant/subdomain resolution (`tenant.portal.com` -> tenant context).
+  - [ ] Relational schema design (PostgreSQL / Supabase) with `company_id` scoping and RLS to replace static `lib/mockData.ts`.
+  - [ ] Stripe Connect architecture (Connected Accounts) for per-company merchant payouts.
 - [ ] **Live Stripe Test Credentials:**
   - [ ] Obtain live Stripe test keys (`pk_test_...`, `sk_test_...`) from Stripe Dashboard.
   - [ ] Add them to Vercel Project Settings (or local `.env.local`) to process live test tokenizations.
@@ -72,6 +81,8 @@
 
 ## 📌 Key Decisions Log
 
+* **Multi-Tenant SaaS over Multi-Repo/Multi-Deployment:** Standardize on a single codebase with dynamic tenant resolution via Next.js middleware (custom domains/subdomains), Postgres RLS, and Stripe Connect. This avoids the exponential maintenance overhead and sync drift of managing 5+ separate repositories or deployment instances.
+* **Vercel + Managed Postgres Production Footprint:** Production hosting baseline on Vercel Pro ($20/mo) coupled with serverless PostgreSQL (Supabase/Neon) and transactional communications (Twilio/Resend) keeps total platform fixed overhead under $65/mo.
 * **Hybrid Payment Architecture:** The checkout modal automatically tests if active Stripe keys and a browser wallet (Google Pay/Apple Pay) are present. If present, it executes live tokenization. If absent, it gracefully falls back to an interactive demo flow with zero crashes or error alerts.
 * **PCI-DSS Level 1 Isolation:** Zero cardholder data (PAN, CVV) touches our Next.js backend. All card entry is delegated to Stripe Elements or browser digital wallets.
 * **Typography & UI Invariants:** Minimum 12px (`text-xs font-bold`) for secondary metadata, 14px (`text-sm`) for body/actions, 16px (`text-base`) for inputs, and no arbitrary micro-fonts.
@@ -87,3 +98,4 @@
 3. If beginning a multi-step feature, create a task scratchpad: `scratch/task-NNN/01-plan.md`.
 4. Run `npm run verify` before committing.
 5. Update this ledger and commit to Git upon task completion.
+
