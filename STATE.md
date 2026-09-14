@@ -23,6 +23,18 @@
   - [x] Created serverless PaymentIntent creation API at [`src/app/api/create-payment-intent/route.ts`](file:///Users/pat/code/payments/src/app/api/create-payment-intent/route.ts).
   - [x] Built [`StripeLivePayment.tsx`](file:///Users/pat/code/payments/src/components/StripeLivePayment.tsx) using Stripe's `PaymentRequestButtonElement` for native Google Pay and Apple Pay sheets.
   - [x] Built hybrid payment modal in [`PaymentModal.tsx`](file:///Users/pat/code/payments/src/components/PaymentModal.tsx) with automatic hardware wallet detection, interactive simulation fallback, and 1-click test card autofill (`4242...`).
+- [x] **UI & Accessibility Standardization (Session 2026-09-07 / 2026-09-13):**
+  - [x] Standardized 4-tier typography scale across all components, modals, and decks.
+  - [x] Eliminated all hardcoded micro-fonts (`text-[9px]`, `text-[10px]`, `text-[11px]`) in favor of crisp, accessible `text-xs font-bold`, `text-sm`, and `text-base`.
+  - [x] Ensured form touch inputs satisfy minimum 16px font-size to prevent mobile Safari auto-zooming.
+  - [x] Unified button sizing and padding across service actions (`[ Manage Bins ]`, `[ Sync Calendar ]`, `[ Extra Bags ]`).
+  - [x] Cleaned up demo clutter and removed test shift badges.
+- [x] **Family Alignment & Vertical Expansion Deck (`/family-pitch`):**
+  - [x] Built 13-slide interactive widescreen presentation deck.
+  - [x] W-2 physician spouse tax shield calculator and passive-to-active time investment model.
+  - [x] Private Medical & Dental Practice Expansion analysis (solving paper-invoice friction inspired by Southdale Pediatrics and maxillofacial/dental surgery centers).
+- [x] **Corporate & Holding Company Architecture:**
+  - [x] Explored corporate entity naming frameworks grounded in "North Star Rd" heritage and "North Star Target Architecture" software engineering concept (*North Star Road Technologies LLC* / *NSR Tech* / *North Star Software Co.*).
 - [x] **Git & GitHub Infrastructure:**
   - [x] Git initialized with clean `.gitignore` (excluding `node_modules`, `.next`, `.env*`).
   - [x] GitHub remote linked to `https://github.com/northstarnerd/swsportaldemo.git`.
@@ -31,7 +43,7 @@
   - [x] Authenticated Vercel CLI and linked project to `patrickbadley's projects`.
   - [x] Diagnosed initial build failure via Vercel CLI events (symlink collision on `public/images`).
   - [x] Fixed symlink, added build safety flag in `next.config.mjs`, and achieved **Ready** production deployment.
-- [x] **Agentic Development Pipeline (2026-09-13):**
+- [x] **Agentic Development Pipeline:**
   - [x] Established `AGENTS.md` (invariants, PCI-DSS boundaries, layer separation).
   - [x] Established `WORKFLOW.md` (mechanism map, model allocation, context rot thresholds).
   - [x] Established `ARCHITECTURE.md` (system data flows, component taxonomy).
@@ -62,6 +74,7 @@
 
 * **Hybrid Payment Architecture:** The checkout modal automatically tests if active Stripe keys and a browser wallet (Google Pay/Apple Pay) are present. If present, it executes live tokenization. If absent, it gracefully falls back to an interactive demo flow with zero crashes or error alerts.
 * **PCI-DSS Level 1 Isolation:** Zero cardholder data (PAN, CVV) touches our Next.js backend. All card entry is delegated to Stripe Elements or browser digital wallets.
+* **Typography & UI Invariants:** Minimum 12px (`text-xs font-bold`) for secondary metadata, 14px (`text-sm`) for body/actions, 16px (`text-base`) for inputs, and no arbitrary micro-fonts.
 * **Deterministic Verification Gate:** All sessions must run `npm run verify` (`scripts/verify.sh`) before completing tasks or committing code.
 * **Disk-Backed State Machine:** State is tracked in `STATE.md` and `scratch/task-NNN/`. Incoming sessions resume from disk state rather than asking the human to rebuild context.
 
