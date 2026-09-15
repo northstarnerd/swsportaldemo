@@ -6,6 +6,7 @@ import { Sparkles, Smartphone, RotateCcw, ShieldAlert, CheckCircle, Zap } from "
 
 interface DemoToolbarProps {
   onOpenSmsDemo: () => void;
+  onOpenSmsTrigger?: () => void;
   onOpenStory: () => void;
   onOpenAuth: () => void;
   onOpenContainers?: () => void;
@@ -16,6 +17,7 @@ interface DemoToolbarProps {
 
 export function DemoToolbar({
   onOpenSmsDemo,
+  onOpenSmsTrigger,
   onOpenStory,
   onOpenAuth,
   onOpenContainers,
@@ -66,13 +68,24 @@ export function DemoToolbar({
         <span>📖 Case Study</span>
       </button>
 
+      {/* On-Demand SMS Trigger */}
+      {onOpenSmsTrigger && (
+        <button
+          onClick={onOpenSmsTrigger}
+          className="bg-red-700 hover:bg-red-600 text-white px-2.5 py-1 rounded-lg font-bold flex items-center gap-1 transition-colors shadow-sm"
+          title="Send SMS Recovery Alert to any phone"
+        >
+          <Smartphone className="w-3 h-3" />
+          <span>📲 Send Live SMS</span>
+        </button>
+      )}
+
       {/* SMS Recovery Demo */}
       <button
         onClick={onOpenSmsDemo}
-        className="bg-red-700 hover:bg-red-600 text-white px-2.5 py-1 rounded-lg font-medium flex items-center gap-1 transition-colors"
+        className="bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded-lg font-medium flex items-center gap-1 transition-colors"
       >
-        <Smartphone className="w-3 h-3" />
-        <span>SMS Demo</span>
+        <span>Simulation</span>
       </button>
 
       {/* State Toggle */}

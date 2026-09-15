@@ -9,6 +9,7 @@ import { PaymentModal } from "@/components/PaymentModal";
 import { AutoPayModal } from "@/components/AutoPayModal";
 import { ExtraServiceModal } from "@/components/ExtraServiceModal";
 import { SmsRecoveryModal } from "@/components/SmsRecoveryModal";
+import { SmsTriggerModal } from "@/components/SmsTriggerModal";
 import { StoryComparisonModal } from "@/components/StoryComparisonModal";
 import { CalendarSyncModal } from "@/components/CalendarSyncModal";
 import { AuthModal } from "@/components/AuthModal";
@@ -22,6 +23,7 @@ export default function DashboardPage() {
   const [autoPayModalOpen, setAutoPayModalOpen] = useState(false);
   const [extraModalOpen, setExtraModalOpen] = useState(false);
   const [smsDemoOpen, setSmsDemoOpen] = useState(false);
+  const [smsTriggerOpen, setSmsTriggerOpen] = useState(false);
   const [storyModalOpen, setStoryModalOpen] = useState(false);
   const [calendarModalOpen, setCalendarModalOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
@@ -159,6 +161,11 @@ export default function DashboardPage() {
         onCleared={handlePaymentSuccess}
       />
 
+      <SmsTriggerModal
+        isOpen={smsTriggerOpen}
+        onClose={() => setSmsTriggerOpen(false)}
+      />
+
       <StoryComparisonModal
         isOpen={storyModalOpen}
         onClose={() => setStoryModalOpen(false)}
@@ -176,6 +183,7 @@ export default function DashboardPage() {
       {/* Pitch Demo Toolbar (Bottom floating) */}
       <DemoToolbar
         onOpenSmsDemo={() => setSmsDemoOpen(true)}
+        onOpenSmsTrigger={() => setSmsTriggerOpen(true)}
         onOpenStory={() => setStoryModalOpen(true)}
         onOpenAuth={() => setAuthModalOpen(true)}
         onOpenContainers={() => setContainerModalOpen(true)}

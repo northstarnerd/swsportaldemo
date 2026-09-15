@@ -81,6 +81,14 @@
   - [x] **Phase 2 (The Walk - Parallel Soft-Launch):** Deploy side-by-side with a *"✨ Try Our New Mobile Portal (Beta / 1-Tap Apple Pay)"* button on `suburbanwaste.com`. Legacy Navusoft portal remains 100% active, eliminating cutover risk, site downtime, and customer disruption.
   - [x] **Phase 3 (The Run - Full Operating Layer):** Living calendar sync (.ics), self-service bulky item scheduling, automated holiday pickup texts, and native iOS/Android App Store listings via Capacitor.js.
 
+- [x] **On-Demand SMS Recovery Pipeline & Mobile Payment Flow (Session 2026-09-15):**
+  - [x] Implemented [`src/app/api/sms/send-recovery/route.ts`](file:///Users/pat/code/payments/src/app/api/sms/send-recovery/route.ts) supporting both live cellular SMS via Twilio Messages API and graceful zero-dependency simulated mode.
+  - [x] Created stateless `base64url` token generation enabling robust `/pay/[token]` URLs without database dependencies.
+  - [x] Built standalone mobile-first payment landing page at [`src/app/pay/[token]/page.tsx`](file:///Users/pat/code/payments/src/app/pay/[token]/page.tsx) and [`src/app/pay/page.tsx`](file:///Users/pat/code/payments/src/app/pay/page.tsx) using [`MobilePayView.tsx`](file:///Users/pat/code/payments/src/components/MobilePayView.tsx).
+  - [x] Integrated Stripe Elements (`StripeLivePayment`) for native 1-tap Apple Pay / Google Pay sheets alongside 1-click test card autofill (`4242...`) and simulated wallet fallback.
+  - [x] Built interactive [`SmsTriggerModal.tsx`](file:///Users/pat/code/payments/src/components/SmsTriggerModal.tsx) and added `[ 📲 Send Live SMS ]` action to [`DemoToolbar.tsx`](file:///Users/pat/code/payments/src/components/DemoToolbar.tsx) for instant on-demand text dispatch.
+  - [x] Updated `.env.example` with optional Twilio configuration variables (`TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER`).
+
 ---
 
 ### Pending / Active Backlog
