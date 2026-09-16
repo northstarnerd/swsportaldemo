@@ -89,6 +89,12 @@
   - [x] Built interactive [`SmsTriggerModal.tsx`](file:///Users/pat/code/payments/src/components/SmsTriggerModal.tsx) and added `[ 📲 Send Live SMS ]` action to [`DemoToolbar.tsx`](file:///Users/pat/code/payments/src/components/DemoToolbar.tsx) for instant on-demand text dispatch.
   - [x] Updated `.env.example` with optional Twilio configuration variables (`TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER`).
 
+- [x] **SWS Initial Call & Voicemail Status (Session 2026-09-16):**
+  - [x] Executed front-office outreach to Suburban Waste Services at `(952) 937-8900`.
+  - [x] Successfully reached Susie Scott's direct office voicemail; delivered the neighbor-first voicemail anchoring on **Promontory Drive in Eden Prairie** and highlighting paper bill & phone call reduction.
+  - [x] Established live **"When Susie Calls Back"** protocol in [`scratch/sws-phone-call-cheatsheet.md`](file:///Users/pat/code/payments/scratch/sws-phone-call-cheatsheet.md) and artifact [`sws_call_cheat_sheet.md`](file:///Users/pat/.gemini/antigravity/brain/a4cb826c-f783-4d96-87c2-9a2497cac801/sws_call_cheat_sheet.md).
+  - [x] Defined 24–48 hour follow-up cadence (targeted follow-up window: Thursday afternoon / Friday morning).
+
 ---
 
 ### Pending / Active Backlog

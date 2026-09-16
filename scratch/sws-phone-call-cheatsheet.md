@@ -1,78 +1,104 @@
-# SWS Front Office Call Cheat Sheet: Susie Scott & Paper Bill Reduction
+# Suburban Waste Services (SWS): Front-Office Callback Protocol & Q&A Playbook
 
-> **Target Contact:** Susie Scott (Office Manager / Billing Lead)  
+> **Current Status:** 🟡 **Voicemail Left on Wednesday Morning (2026-09-16)**  
+> **Target Contact:** Susie Scott (Office Manager / Leads Front-Office & "WOW" Customer Support)  
 > **Company:** Suburban Waste Services (SWS) — Savage & Eden Prairie, MN  
 > **Direct Line:** (952) 937-8900  
-> **Best Window:** Tuesday – Thursday, 10:00 AM – 11:30 AM (avoid Monday mornings and Friday afternoons)  
-> **Core Objective:** Get 60 seconds with Susie (or her direct email) to send a 30-second mobile video demo.
+> **Owners / Founders:** Paul & Katie Rosland, Rick Sievers  
+> **Your Anchor Identity:** Patrick Badley — Customer on **Promontory Drive in Eden Prairie**  
+> **Next Action:** Ready for inbound callback from Susie / Scheduled follow-up in 24–48 hours.
 
 ---
 
-## 🎯 The Strategic Frame: Paper Mail & Past-Due Friction
+## ⚡ Live Protocol: When Susie Calls You Back!
 
-* **The Reality:** When quarterly autopay fails (expired card, re-issued chip, bank flag), haulers print and snail-mail paper "Past Due" notices ($1.50–$2.00+ per piece with postage, paper, envelopes, and labor).
-* **The Cost:** Sits on kitchen counters for 2–3 weeks, delays cash collection by 30–45 days, and drives inbound phone calls from annoyed residents.
-* **Our Solution:** A 1-click text alert (*"Your quarterly bill is past due—tap to pay via Apple Pay"*). Settles the balance in 5 seconds with zero paper, zero stamps, and zero phone calls.
+When your phone rings with a `(952)` area code or caller ID:
 
----
-
-## 📞 Phase 1: The Front Desk / Gatekeeper (30 Seconds)
-
-**Dial (952) 937-8900.** When the representative answers:
-
-> *"Hi there! My name is Patrick Badley. I'm a resident over in Eden Prairie with an active account on Route 4. I was actually hoping to see if Susie Scott is at her desk for just two minutes?"*
-
-**If asked:** *"May I ask what this is regarding?"*
-
-> *"Sure! I have an active customer account with you guys, but I'm also a local software engineer. I built a quick prototype specifically to help SWS cut down on mailing out paper past-due bills when credit cards expire, and I wanted to ask Susie the best email address to send a 30-second video demo to."*
-
-*(Key: Dropping your active customer status immediately lowers their sales defense).*
+### 1. The Opening (Warm & Re-Anchoring)
+> *"Hi Susie, thanks so much for getting back to me! How's your week going?*
+> 
+> *As I mentioned in my voicemail, I'm an SWS customer of yours over on Promontory Drive in Eden Prairie. First off, thank you and your crew for great curbside service week in and week out.*
+> 
+> *The reason I reached out is that I'm a local software engineer, and as a customer, I've been thinking about ways to help SWS cut down on mailing paper past-due notices and taking credit cards over the phone when cards expire during quarterly billing.*
+> 
+> *I have a few ideas—like automated text reminders with 1-click Apple Pay—**but really, I wanted to hear from you: what are the biggest headaches or bottlenecks you and your front office team deal with day-to-day right now?**"*
 
 ---
 
-## 🗣️ Phase 2: Talking to Susie (60–90 Seconds)
+## 👂 Phase 2: Active Listening & Discovery Guide
 
-If transferred or if Susie answers directly:
+Once you ask that question, **pause and let her talk.** Match her response to one of these three common buckets:
 
-> *"Hi Susie, thanks so much for taking my call! My name is Patrick Badley—I'm an Eden Prairie resident and longtime customer on Route 4. First off, thank you and your drivers for great curbside service.*
->
-> *The reason I’m calling is that I know how much time and money haulers spend printing and mailing paper notices every time a resident's card expires during quarterly billing—not to mention the flood of phone calls your team has to take.*
->
-> *I’m a local software engineer, and I put together a lightweight prototype designed to sit right on top of Navusoft. When a card declines or a bill is past due, it texts the resident a secure link so they can settle it in **5 seconds using Apple Pay or Google Pay** right on their phone.*
->
-> *It cuts out the paper mailings, clears the past-due balance immediately, and keeps your phone lines open. I have a 30-second video clip showing how it works—**what’s the best email where I can send that over to you?**"*
+| If Susie Mentions... | What It Means | Your Conversational Pivot |
+| :--- | :--- | :--- |
+| **"Billing week is chaos / phones ring constantly"** | Inbound call fatigue from expired cards & billing questions. | *"That makes total sense. How much of that time is spent just having residents read 16-digit card numbers over the phone?"* |
+| **"Printing/mailing paper bills is a huge chore"** | Hard costs (postage/paper) and 3-week cash collection lag. | *"Right, and then you have to wait weeks for them to see it on the kitchen counter. That's why I was thinking an instant 1-tap text link could clear that cash in 48 hours."* |
+| **"We just switched systems / rolled out Navusoft"** | Tech migration fatigue; fears disruptions to daily operations. | *"I completely understand—migrations are grueling. That's why any idea I have is strictly a lightweight layer that sits on top of Navusoft without touching your accounting ledger or routes."* |
 
 ---
 
-## 🛡️ Phase 3: Handling Quick Responses & Objections
+## 🤝 Phase 3: The Soft Close (Next Step)
 
-| What Susie Might Say | Your Winning Response |
-| :--- | :--- |
-| **"We already have an online portal through Navusoft."** | *"Navusoft is great for the heavy back-office lifting, but residents still let cards expire, which forces you to mail paper bills. This doesn't replace Navusoft at all—it's just a 1-tap mobile checkout on top so people pay instantly from their phone instead of waiting for a paper letter."* |
-| **"Can you just send it to `info@suburbanwaste.com`?"** | *"I can definitely do that, Susie! But since this is built specifically to make your team's day easier, could I copy your direct email as well so it doesn't get lost in general customer service emails?"* |
-| **"We're really busy right now with billing."** | *"I completely understand—that's the exact reason I built this! I won't take another second of your time. What's your email? I'll send a 30-second video and you can watch it whenever you have a free minute."* |
-| **"Is this going to cost us a lot of money?"** | *"Not at all. We actually propose a 30-day risk-free pilot where we only help you recover past-due cards that would otherwise require printing and mailing paper bills. If it doesn't save you money and time, you owe nothing."* |
+Do not try to close a deal or sell a contract on this call. Ask for a casual conversation or permission to send a 30-second video:
+
+> *"Susie, this is super helpful context. I’d love to buy you a cup of coffee or swing by your Savage office for 10 minutes sometime next week just to show you a quick demo of what I put together and see if it aligns with what you need. Would you be open to that?"*
+
+**If she prefers email:**
+> *"Totally understand! What’s your direct email address? I'll send over a 30-second video clip showing the 1-tap mobile payment idea so you can glance at it whenever you have a free minute."*
 
 ---
 
-## ✉️ Phase 4: Immediate Follow-Up Email (Send within 5 Minutes)
+## ⏳ Phase 4: Follow-Up Cadence (If No Callback within 24–48 Hours)
 
-**Subject:** *Per our call - 30-sec video for Susie (SWS paper bill & 1-tap payment demo)*
+If Susie hasn't called back by **Thursday afternoon or Friday morning**:
+
+### Step 1: Second Phone Touch to Front Desk
+Call `(952) 937-8900`:
+> *"Hi there! My name is Patrick Badley. I'm an active customer over on Promontory Drive in Eden Prairie. I left a voicemail for Susie yesterday—I just wanted to see if she was at her desk for two minutes, or if there's an email address where I could drop her a quick note?"*
+
+### Step 2: Warm Email Follow-Up (Once Email is Secured)
+**Subject:** *Quick idea from an Eden Prairie customer on Promontory Dr (Susie)*
 
 > Hi Susie,
 >
-> Great briefly connecting on the phone just now! As promised, here is the quick 30-second video demo of the 1-tap mobile payment flow:
+> I left you a brief voicemail yesterday—I’m an SWS customer over on Promontory Drive in Eden Prairie. First off, thank you and your crew for great curbside service every week!
 >
-> 👉 **[Link to 30-Second Loom Demo Video]**  
-> *(You can also test the live interactive demo here on your phone: https://swsportaldemo.vercel.app)*
+> I’m a local software engineer, and as a customer, I’ve been thinking about ways to help your team cut down on mailing out paper past-due notices and taking credit cards over the phone when cards expire.
 >
-> **How this helps your team:**
-> 1. **Cuts Paper Past-Due Notices:** Instead of printing, stuffing, and mailing paper letters when quarterly autopays decline, an automated text allows residents to settle their balance instantly.
-> 2. **Instant 1-Tap Apple Pay / Google Pay:** Homeowners confirm with FaceID in 5 seconds—no typing in 16-digit card numbers or mailing back paper checks.
-> 3. **Complements Navusoft:** Zero disruption to your current route manifests, dispatch sheets, or accounting ledger.
+> I put together a quick 30-second video showing how a 1-tap Apple Pay text alert could let residents clear expired cards in 5 seconds without tying up your phone lines:
 >
-> I'd love to buy you a cup of coffee or do a quick 10-minute screen share to show how a 30-day risk-free pilot could recover past-due accounts without mailing a single letter.
+> 👉 **[Link to 30-Second Demo Video / swsportaldemo.vercel.app]**
 >
-> Thanks again for the great service,  
+> I’d love to hear your thoughts or learn what other front-office bottlenecks your team is dealing with right now. Would you have 10 minutes for a quick chat next week?
+>
+> Best regards,  
 > **Patrick Badley**  
-> Eden Prairie, MN (Route 4) | (Your Phone Number)
+> Promontory Dr, Eden Prairie | (Your Phone Number)
+
+---
+
+# 📚 Appendix: Potential Follow-Up Questions & Winning Answers
+
+### Q1: "We already have an online portal with Navusoft. Why would we need this?"
+> *"Navusoft is great for the heavy back-office lifting: dispatch sheets, route logistics, container inventory, and core accounting. What we're talking about isn't replacing Navusoft at all. It’s simply a modern 'mobile front-door'—specifically for 1-tap Apple Pay and automated text reminders—so residents can settle past-due bills in 5 seconds on their phone instead of having to call your desk or wait for a paper letter."*
+
+### Q2: "How would this work with our current systems? We don't want to change our accounting or routes."
+> *"Zero change to your daily operations. In fact, for a pilot, we don't even touch your website or Navusoft setup. You could simply export a list of past-due accounts whose cards expired, we send the 1-click text reminders, collect the funds into your account, and hand you a clean reconciliation sheet to clear the balance in Navusoft."*
+
+### Q3: "Is this going to cost us a lot of money? What is your business model?"
+> *"Not at all. Right now, I'm focused on solving the real operational headache for SWS. For an initial test, we propose a 30-day risk-free pilot where we only help you recover past-due accounts that would otherwise require printing, stuffing, and mailing paper notices. If it doesn't recover cash faster and save your staff hours of phone time, you owe nothing."*
+
+### Q4: "Do residents actually use Apple Pay or Google Pay to pay garbage bills?"
+> *"Over 80% of consumer web traffic in Minnesota is now on mobile devices. Most people don't sit down at desktop computers to pay utility bills anymore. With Apple Pay, residents don't have to go find their wallet, type in a 16-digit card number, or reset a forgotten password—they just double-click the side button on their iPhone and it's paid in 3 seconds."*
+
+### Q5: "Does Apple Pay cost Suburban Waste extra processing fees?"
+> *"No, Apple Pay costs merchants zero additional fees. Apple collects their fraction directly from the issuing banks, not from SWS. In fact, because Apple Pay uses biometric tokenization (FaceID), it qualifies for standard or lower interchange rates and virtually eliminates fraudulent chargebacks compared to manually keyed phone orders."*
+
+### Q6: "How much does a text message cost compared to what we do today?"
+> *"Sending a text alert costs about a penny and a half. By comparison, mailing a paper past-due notice costs roughly \$1.50 to \$2.00+ once you count the \$0.73 stamp, envelopes, paper, and staff time—plus the 5 minutes your staff spends taking the card over the phone when they call in. On 300 delinquent cards, switching to text recovery saves over \$1,300 every quarter in direct waste."*
+
+### Q7: "What about residents who don't have smartphones or don't want texts?"
+> *"They continue exactly as they do today! Traditional payers can still mail paper checks or use your existing desktop portal. This simply captures the busy, mobile-first residents who let their bills slip simply because typing card numbers on a phone was too painful."*
+
+### Q8: "Who are you again? Do you work for a software company?"
+> *"I'm a local software engineer living right here in Eden Prairie on Promontory Drive, and a longtime SWS customer. I build modern financial technology and customer portals, and because I love your curbside service, I wanted to see if I could bring my expertise to help out a great local family business."*
