@@ -51,10 +51,11 @@
   - [x] Private Medical & Dental Practice Expansion analysis (solving paper-invoice friction inspired by Southdale Pediatrics and maxillofacial/dental surgery centers).
 - [x] **Corporate & Holding Company Architecture & Brand Identity:**
   - [x] Explored corporate entity naming frameworks: Evaluated "North Star" heritage vs. regional over-saturation in Minnesota.
-  - [x] Established "Pink Cardinal" naming track honoring daughters (pink) and family cardinal heritage + rare biological pink cardinal phenomenon.
+  - [x] Established "Pink Cardinal" naming track honoring daughters (pink), family cardinal heritage, and rare biological pink cardinal phenomenon.
+  - [x] Selected singular form: **Pink Cardinal Technology LLC** (naturally balances core software product building with high-rate technology advisory / architecture consulting).
   - [x] Verified USPTO trademark and Minnesota Secretary of State registries (100% clean, zero software/tech conflicts).
   - [x] Identified target domain: `pinkcardinal.tech` ($9.99/yr).
-  - [x] Generated initial visual identity explorations (geometric modern, friendly character mascot, and unicorn cardinal in flight) in [`pink_cardinal_logo_concepts.md`](file:///Users/pat/.gemini/antigravity/brain/d3d236a5-9860-4f03-8ca7-c53c19854058/pink_cardinal_logo_concepts.md).
+  - [x] Refreshed visual identity explorations with singular branding (**Pink Cardinal Technology**) in [`pink_cardinal_logo_concepts.md`](file:///Users/pat/.gemini/antigravity/brain/d3d236a5-9860-4f03-8ca7-c53c19854058/pink_cardinal_logo_concepts.md).
 - [x] **Git & GitHub Infrastructure:**
   - [x] Git initialized with clean `.gitignore` (excluding `node_modules`, `.next`, `.env*`).
   - [x] GitHub remote linked to `https://github.com/northstarnerd/swsportaldemo.git`.
