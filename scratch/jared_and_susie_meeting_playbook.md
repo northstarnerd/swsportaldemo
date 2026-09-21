@@ -1,38 +1,25 @@
-# SWS Executive Playbook: Jared Call & Susie In-Person Meeting
+# SWS Executive Playbook: Jared Alignment & Susie Meeting
 
 > **Purpose:** Bulleted topic guide and mental models for natural improvisation.
 
 ---
 
-# Part 1: Jared Faris Call (This Afternoon)
+# Part 1: Jared Faris Call Notes & Advisory Models
 
-### 1. The Win & Context
-* **The Lead:** Suburban Waste Services (SWS) — independent 50-truck regional hauler in Savage/Eden Prairie.
-* **The Breakthrough:** Susie Scott (Office Manager) called back directly from the front desk after the initial voicemail.
-* **The Next Step:** She took my email and wants to meet in person this week or next to look at options.
+### 1. Commercial Baseline & Value Floor
+* **The Rule:** Not worth doing anything that isn't at least **$1,000 – $2,000 / month**.
+* **The Target Sweet Spot:** **$3,000 / month** for active advisory/vendor oversight, split between Patrick & Jared.
 
-### 2. Operational Intel She Revealed
-* **Portal Pain:** Struggling through their Navusoft customer portal migration; getting flooded with customer complaints about logging in.
-* **Other Vendor:** Already working with another software company with waste industry experience to help fix it.
-* **Migration Fatigue:** Apprehensive about making any more big, disruptive, or expensive software changes.
+### 2. The Core Metaphor: The "General Contractor" (GC)
+* SWS understands blue-collar trades, trucks, and facilities.
+* The other waste software company is a **subcontractor**.
+* Without a General Contractor representing the owner, subs overcharge, make excuses, and do sloppy work.
+* Patrick + Jared act as the **General Contractor for Technology**: inspecting work, sitting on vendor calls, calling BS on technical jargon, and protecting SWS.
 
-### 3. Two-Track Strategy & Clean Boundaries
-* **Track A (My Product Track):**
-  * I run the software build myself (1-tap SMS past-due pilot + Express Pay by phone #).
-  * SWS serves as my live flagship pilot to prove a vertical SaaS product for 40+ regional haulers.
-  * Zero delivery or dev-shop burden for Jared.
-* **Track B (Faris Consulting Advisory):**
-  * If SWS wants high-level vendor oversight, architecture review, or help holding their other vendor accountable.
-  * Route through Faris Consulting under our 85/15 self-sourced model.
-
-### 4. Meeting Strategy & The Zoom Handoff
-* **Solo In-Person:** Meeting Susie solo in Savage to maximize the local neighbor relationship (Promontory Drive, 10 minutes away).
-* **No Pricing In Person:** Strictly relationship-building and problem discovery; zero quoting of consulting rates or contract terms.
-* **The Handoff:** If they show interest in vendor oversight or advisory, introduce Faris Consulting and set up a joint Zoom call for Jared to lead commercial scoping.
-
-### 5. Asks for Jared
-* **Positioning:** How he prefers Faris Consulting described at a high level to traditional SMB owners.
-* **Buying Signals:** Key signs that distinguish a company ready to pay for advisory vs. one that just wants to vent.
+### 3. The 3 Advisory Engagement Models
+* **Model 1: "I'll teach / advise you" (~$1.5k/mo):** Monthly review of vendor proposals; sounding board for Susie/Paul.
+* **Model 2: "I'll ride along with you" (~$3k/mo — Target):** Active vendor oversight; join bi-weekly vendor calls; review technical specs; keep vendor accountable.
+* **Model 3: "I'll take the wheel and run this for you" (~$5k+/mo):** Fractional CTO; full technical ownership; driving the roadmap.
 
 ---
 
@@ -68,11 +55,14 @@
 * **The Flow:** Type 10-digit cell phone number $\rightarrow$ view balance $\rightarrow$ 1-tap Apple Pay.
 * **The Win:** Kills login complaint calls overnight without touching Navusoft.
 
-### Stage 4: Plant the Advisory Seed (Faris Consulting Bridge)
-* **The Angle:** If she feels overwhelmed managing the other software vendor.
-* **The Positioning:** 18 years in software architecture, partnering with Jared Faris at Faris Consulting.
-* **The Role:** An experienced, independent technical set of eyes sitting on **their side of the table** to review vendor proposals, translate jargon, and prevent wasted spend.
-* **The Next Step:** Offer to set up a quick Zoom with Jared if they want help evaluating options.
+### Stage 4: Plant the Advisory Seed (The "General Contractor" Bridge)
+* **The Trigger:** If Susie expresses anxiety or frustration managing the other software vendor.
+* **The GC Metaphor:**
+  * SWS hired a software subcontractor.
+  * Without a General Contractor on your side, it's hard to know if you're getting what you pay for.
+  * Patrick & Jared (Faris Consulting) act as your **Technology General Contractor**: sitting on vendor calls, reviewing their architecture, and protecting SWS's wallet and sanity.
+* **The Model:** Introduce **"Ride Along" Vendor Oversight** (~$3k/mo).
+* **The Next Step:** Set up a joint Zoom with Jared to walk through how the GC model works.
 
 ### Stage 5: The 60-Second "Future Vision" Demo & Close
 * **The Phone Demo (`swsportaldemo.vercel.app`):**

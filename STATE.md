@@ -124,7 +124,11 @@
   - [x] **Two-Track Commercial & Partnership Architecture:**
     - **Track A (Product / Vertical SaaS):** Patrick owns 100% of the software product (1-tap SMS past-due pilot + Express Pay by phone # on `suburbanwastemn.com`) targeting SWS as the live flagship pilot.
     - **Track B (Advisory / Faris Consulting):** If SWS requests broader vendor oversight or architecture advisory to manage the other waste vendor, Patrick will partner with Jared Faris (Faris Consulting) under the established 85/15 model. Patrick leads the in-person relationship solo in Savage, with a warm handoff to a joint Zoom call with Jared for commercial scoping.
-  - [x] Created two-part executive playbook in artifact [`jared_and_susie_meeting_playbook.md`](file:///Users/pat/.gemini/antigravity/brain/a4cb826c-f783-4d96-87c2-9a2497cac801/jared_and_susie_meeting_playbook.md) and on disk at [`scratch/jared_and_susie_meeting_playbook.md`](file:///Users/pat/code/payments/scratch/jared_and_susie_meeting_playbook.md).
+  - [x] **Jared Faris Debrief & Advisory Structuring (Session 2026-09-21 Afternoon):**
+    - Aligned with Jared on advisory commercial floor: minimum value floor is $1,000–$2,000/month.
+    - Adopted the **"General Contractor" (GC)** metaphor for pitching traditional SMB / industrial operators: SWS hired a software subcontractor; Patrick & Jared act as the owner's General Contractor to inspect the build, sit on vendor calls, call BS on jargon, and ensure SWS gets what they paid for.
+    - Established 3-tier advisory ladder: Model 1: "I'll teach you" (~$1.5k/mo); Model 2: "I'll ride along with you" (~$3k/mo target sweet spot for split advisory); Model 3: "I'll take the wheel" (~$5k+/mo fractional CTO).
+    - Updated [`jared_and_susie_meeting_playbook.md`](file:///Users/pat/.gemini/antigravity/brain/a4cb826c-f783-4d96-87c2-9a2497cac801/jared_and_susie_meeting_playbook.md) and on disk at [`scratch/jared_and_susie_meeting_playbook.md`](file:///Users/pat/code/payments/scratch/jared_and_susie_meeting_playbook.md).
 
 ---
 
