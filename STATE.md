@@ -54,8 +54,9 @@
   - [x] Established "Pink Cardinal" naming track honoring daughters (pink), family cardinal heritage, and rare biological pink cardinal phenomenon.
   - [x] Selected singular form: **Pink Cardinal Technology LLC** (naturally balances core software product building with high-rate technology advisory / architecture consulting).
   - [x] Verified USPTO trademark and Minnesota Secretary of State registries (100% clean, zero software/tech conflicts).
-  - [x] Identified target domain: `pinkcardinal.tech` ($9.99/yr).
-  - [x] Refreshed visual identity explorations with singular branding (**Pink Cardinal Technology**) in [`pink_cardinal_logo_concepts.md`](file:///Users/pat/.gemini/antigravity/brain/d3d236a5-9860-4f03-8ca7-c53c19854058/pink_cardinal_logo_concepts.md).
+  - [x] Sourced target domain: `pinkcardinal.tech` ($9.99/yr).
+  - [x] Selected **Concept 3** (Unicorn Cardinal in Flight with golden star horn crest and singular "PINK CARDINAL TECHNOLOGY" typography) as the official logo in [`pink_cardinal_logo_concepts.md`](file:///Users/pat/.gemini/antigravity/brain/d3d236a5-9860-4f03-8ca7-c53c19854058/pink_cardinal_logo_concepts.md).
+  - [x] Initialized standalone repository workspace at `/Users/pat/code/pink-cardinal-tech/` with tailored `AGENTS.md`, `STATE.md`, quality gate script, and the official logo asset.
 - [x] **Git & GitHub Infrastructure:**
   - [x] Git initialized with clean `.gitignore` (excluding `node_modules`, `.next`, `.env*`).
   - [x] GitHub remote linked to `https://github.com/northstarnerd/swsportaldemo.git`.
