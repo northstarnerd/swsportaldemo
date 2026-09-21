@@ -49,8 +49,12 @@
   - [x] Built 13-slide interactive widescreen presentation deck.
   - [x] W-2 physician spouse tax shield calculator and passive-to-active time investment model.
   - [x] Private Medical & Dental Practice Expansion analysis (solving paper-invoice friction inspired by Southdale Pediatrics and maxillofacial/dental surgery centers).
-- [x] **Corporate & Holding Company Architecture:**
-  - [x] Explored corporate entity naming frameworks grounded in "North Star Rd" heritage and "North Star Target Architecture" software engineering concept (*North Star Road Technologies LLC* / *NSR Tech* / *North Star Software Co.*).
+- [x] **Corporate & Holding Company Architecture & Brand Identity:**
+  - [x] Explored corporate entity naming frameworks: Evaluated "North Star" heritage vs. regional over-saturation in Minnesota.
+  - [x] Established "Pink Cardinal" naming track honoring daughters (pink) and family cardinal heritage + rare biological pink cardinal phenomenon.
+  - [x] Verified USPTO trademark and Minnesota Secretary of State registries (100% clean, zero software/tech conflicts).
+  - [x] Identified target domain: `pinkcardinal.tech` ($9.99/yr).
+  - [x] Generated initial visual identity explorations (geometric modern, friendly character mascot, and unicorn cardinal in flight) in [`pink_cardinal_logo_concepts.md`](file:///Users/pat/.gemini/antigravity/brain/d3d236a5-9860-4f03-8ca7-c53c19854058/pink_cardinal_logo_concepts.md).
 - [x] **Git & GitHub Infrastructure:**
   - [x] Git initialized with clean `.gitignore` (excluding `node_modules`, `.next`, `.env*`).
   - [x] GitHub remote linked to `https://github.com/northstarnerd/swsportaldemo.git`.
