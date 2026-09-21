@@ -10,6 +10,15 @@
 ## 🎯 Current Objectives & Status
 
 ### Completed Milestones
+- [x] **URL-Isolated Multi-Demo Suite Scaffolding (Session 2026-09-21):**
+  - [x] Engineered clean URL-driven routing structure under `/demos/*` with $0 extra Vercel cost.
+  - [x] Enforced strict invariant: zero switcher toggles or cross-demo links on customer pages.
+  - [x] Built internal link directory hub at [`src/app/demos/page.tsx`](file:///Users/pat/code/payments/src/app/demos/page.tsx).
+  - [x] Built isolated prototype for **Walters Recycling & Refuse** at [`src/app/demos/walters/page.tsx`](file:///Users/pat/code/payments/src/app/demos/walters/page.tsx).
+  - [x] Built isolated prototype for **1-Tap MedPay (Pediatrics/Oral Surgery)** at [`src/app/demos/medpay/page.tsx`](file:///Users/pat/code/payments/src/app/demos/medpay/page.tsx).
+  - [x] Built isolated prototype for **Residential Snow Dispatch** at [`src/app/demos/snow/page.tsx`](file:///Users/pat/code/payments/src/app/demos/snow/page.tsx).
+  - [x] Built isolated prototype for **SafeRoute K-12 Transportation** at [`src/app/demos/bus/page.tsx`](file:///Users/pat/code/payments/src/app/demos/bus/page.tsx).
+  - [x] Parameterized [`PaymentModal.tsx`](file:///Users/pat/code/payments/src/components/PaymentModal.tsx) and [`icsGenerator.ts`](file:///Users/pat/code/payments/src/lib/icsGenerator.ts) for multi-merchant reusability.
 - [x] **SWS Callback & Active Engagement (Session 2026-09-21):**
   - [x] SWS called back! SWS pilot conversation is now the primary, prioritized focus.
   - [x] Established and documented adjacent market expansion playbook in [`EXPANSION_IDEAS.md`](file:///Users/pat/code/payments/EXPANSION_IDEAS.md) covering:

@@ -78,16 +78,19 @@ export function generateOutlookCalendarUrl(): string {
   return `https://outlook.live.com/calendar/0/deeplink/compose?path=/calendar/action/compose&rru=addevent&startdt=2026-08-27T07:00:00&enddt=2026-08-27T08:00:00&subject=${subject}&body=${body}&location=${location}`;
 }
 
-export function downloadCalendarFile() {
-  const ics = generateSwsCalendarIcs();
+export function downloadCalendarFile(filename = "SWS_Eden_Prairie_Pickup_Schedule.ics", customIcs?: string) {
+  const ics = customIcs || generateSwsCalendarIcs();
   const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
   const url = window.URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.setAttribute("download", "SWS_Eden_Prairie_Pickup_Schedule.ics");
+  link.setAttribute("download", filename);
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
   window.URL.revokeObjectURL(url);
 }
+
+export const downloadICSFile = downloadCalendarFile;
+
 

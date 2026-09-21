@@ -21,9 +21,20 @@ interface PaymentModalProps {
   onClose: () => void;
   amount: number;
   onSuccess: () => void;
+  merchantName?: string;
+  subtitle?: string;
+  headerGradientClass?: string;
 }
 
-export function PaymentModal({ isOpen, onClose, amount, onSuccess }: PaymentModalProps) {
+export function PaymentModal({
+  isOpen,
+  onClose,
+  amount,
+  onSuccess,
+  merchantName = "Suburban Waste Services",
+  subtitle = "Suburban Waste Services • Eden Prairie",
+  headerGradientClass = "from-[#7A1900] to-[#9E2A0D]",
+}: PaymentModalProps) {
   const [platform, setPlatform] = useState<"apple" | "google">("apple");
   const [paymentMethod, setPaymentMethod] = useState<"apple" | "google" | "card">("apple");
   const [cardNumber, setCardNumber] = useState("");
@@ -119,10 +130,10 @@ export function PaymentModal({ isOpen, onClose, amount, onSuccess }: PaymentModa
       <div className="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden relative">
         
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#7A1900] to-[#9E2A0D] p-5 sm:p-6 text-white flex items-center justify-between">
+        <div className={`bg-gradient-to-r ${headerGradientClass} p-5 sm:p-6 text-white flex items-center justify-between`}>
           <div>
             <h3 className="font-black text-xl">Secure Bill Payment</h3>
-            <p className="text-sm text-red-100 mt-0.5">Suburban Waste Services • Eden Prairie</p>
+            <p className="text-sm opacity-90 mt-0.5">{subtitle}</p>
           </div>
           <button
             onClick={onClose}
