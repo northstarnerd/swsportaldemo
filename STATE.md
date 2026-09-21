@@ -1,7 +1,7 @@
 # Workspace State & Session Ledger (`STATE.md`)
 
 > **Single source of truth for active tasks, recent decisions, and cross-session handoffs.**
-> *Last Updated:* 2026-09-13
+> *Last Updated:* 2026-09-21
 > *Production Deployment:* [https://swsportaldemo.vercel.app](https://swsportaldemo.vercel.app)
 > *GitHub Repository:* [https://github.com/northstarnerd/swsportaldemo](https://github.com/northstarnerd/swsportaldemo)
 
@@ -10,6 +10,13 @@
 ## 🎯 Current Objectives & Status
 
 ### Completed Milestones
+- [x] **SWS Callback & Active Engagement (Session 2026-09-21):**
+  - [x] SWS called back! SWS pilot conversation is now the primary, prioritized focus.
+  - [x] Established and documented adjacent market expansion playbook in [`EXPANSION_IDEAS.md`](file:///Users/pat/code/payments/EXPANSION_IDEAS.md) covering:
+    - **Adjacent Twin Cities Independent Haulers:** Walters Recycling, Aspen Waste, Dick's Sanitation (DSI), Highland, Tennis (shared Navusoft/Soft-Pak/Tower tech, 100% code reuse, executive outreach model).
+    - **1-Tap MedPay / Private Medical & Dental:** Warm family beachhead (physician spouse credibility, brother-in-law at Maxillofacial Surgery Center), HSA/FSA card support, $30–$250 post-insurance patient balance recovery, $250–$500/mo SaaS economics.
+    - **Route-Based Home Services:** Timely Minnesota residential snow plowing dispatch/cards-on-file, septic pumping, municipal sweeping.
+  - [x] Placed horizontal expansion verticals on official backburner as the dual-purpose scaling roadmap (once SWS pilot metrics prove out) or fallback playbook (if SWS negotiations stall).
 - [x] **Initial Customer Portal POC:**
   - [x] Next.js 14 App Router setup with Tailwind CSS, Lucide icons, and Framer Motion animations.
   - [x] Account balance summary ($94.50 quarterly residential bill).
