@@ -111,6 +111,15 @@
   - [x] Established live **"When Susie Calls Back"** protocol in [`scratch/sws-phone-call-cheatsheet.md`](file:///Users/pat/code/payments/scratch/sws-phone-call-cheatsheet.md) and artifact [`sws_call_cheat_sheet.md`](file:///Users/pat/.gemini/antigravity/brain/a4cb826c-f783-4d96-87c2-9a2497cac801/sws_call_cheat_sheet.md).
   - [x] Defined 24–48 hour follow-up cadence (targeted follow-up window: Thursday afternoon / Friday morning).
 
+- [x] **Susie Scott Inbound Callback & In-Person Meeting Breakthrough (Session 2026-09-21):**
+  - [x] **Inbound Call Received:** Susie Scott called Patrick back directly from SWS front office `(952) 937-8900`.
+  - [x] **Operational Intel Gathered:** SWS is currently struggling through its Navusoft customer portal transition, receiving widespread customer complaints about login failures, working with another waste industry software firm, and experiencing acute apprehension toward major software changes.
+  - [x] **Positioning & Next Step:** Patrick framed his skill set around low-friction problem solving without a software overhaul; Susie agreed to an in-person meeting in Savage, MN and took Patrick's email to coordinate availability for this week or next.
+  - [x] **Two-Track Commercial & Partnership Architecture:**
+    - **Track A (Product / Vertical SaaS):** Patrick owns 100% of the software product (1-tap SMS past-due pilot + Express Pay by phone # on `suburbanwastemn.com`) targeting SWS as the live flagship pilot.
+    - **Track B (Advisory / Faris Consulting):** If SWS requests broader vendor oversight or architecture advisory to manage the other waste vendor, Patrick will partner with Jared Faris (Faris Consulting) under the established 85/15 model. Patrick leads the in-person relationship solo in Savage, with a warm handoff to a joint Zoom call with Jared for commercial scoping.
+  - [x] Created two-part executive playbook in artifact [`jared_and_susie_meeting_playbook.md`](file:///Users/pat/.gemini/antigravity/brain/a4cb826c-f783-4d96-87c2-9a2497cac801/jared_and_susie_meeting_playbook.md) and on disk at [`scratch/jared_and_susie_meeting_playbook.md`](file:///Users/pat/code/payments/scratch/jared_and_susie_meeting_playbook.md).
+
 ---
 
 ### Pending / Active Backlog
