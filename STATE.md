@@ -130,6 +130,10 @@
     - Established 3-tier advisory ladder: Model 1: "I'll teach you" (~$1.5k/mo); Model 2: "I'll ride along with you" (~$3k/mo target sweet spot for split advisory); Model 3: "I'll take the wheel" (~$5k+/mo fractional CTO).
     - Integrated Jared's official 4-point SMB positioning narrative: growing business where tech is critical/expensive but lacks in-house leadership; guides who plug the gap to hold providers accountable and call BS, letting leadership focus on their business without having to become a tech company.
     - Updated [`jared_and_susie_meeting_playbook.md`](file:///Users/pat/.gemini/antigravity/brain/a4cb826c-f783-4d96-87c2-9a2497cac801/jared_and_susie_meeting_playbook.md), [`scratch/jared_and_susie_meeting_playbook.md`](file:///Users/pat/code/payments/scratch/jared_and_susie_meeting_playbook.md), and `../resume/resumes/RESUME-consulting-jared.md`.
+  - [x] **In-Person Meeting Officially Confirmed (Session 2026-09-22):**
+    - **Date & Time:** Thursday, September 24, 2026 @ 2:00 PM.
+    - **Location:** SWS Savage Office — **7125 126th Street West, Suite 500, Savage, MN 55378** (Susie note: "come to Suite 500 - there are a lot of doors out front!").
+    - **Objective:** Run 5-stage discovery meeting; pitch 30-day past-due SMS pilot + Express Pay by phone #; plant the General Contractor advisory seed (~$3k/mo) if vendor friction is acute.
 
 ---
 

@@ -34,11 +34,15 @@
 
 ---
 
-# Part 2: In-Person Game Plan with Susie Scott (Savage, MN)
+# Part 2: In-Person Game Plan with Susie Scott
 
-* **Location:** SWS Front Office in Savage (or local coffee shop).
-* **Persona:** Local neighbor on Promontory Drive who builds modern fintech and customer portals.
-* **Approach:** Listen 80% of the time; offer low-friction quick wins; no rip-and-replace.
+> **Confirmed Meeting:** **Thursday, September 24, 2026 @ 2:00 PM**  
+> **Location:** **7125 126th Street West, Suite 500, Savage, MN 55378**  
+> *(Susie's note: "Please come to Suite 500 — there are a lot of doors out front!")*  
+> **Direct Contact:** Susie Scott (Office Manager) • (952) 937-8900 x3555 • `sscott@suburbanwastemn.com`  
+> **Driving Distance:** ~12–15 minutes south from Promontory Dr across the Minnesota River.  
+> **Persona:** Local neighbor on Promontory Drive who builds modern fintech and customer portals.  
+> **Approach:** Listen 80% of the time; offer low-friction quick wins; no rip-and-replace.
 
 ---
 
