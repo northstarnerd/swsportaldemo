@@ -1,6 +1,8 @@
 # AGENTS.md — Workspace Guidelines & Operating System
 
 > **Workplace Philosophy:** Build an agent workplace, not a prompt library. Judgment stays human, state lives on disk, context loads only when needed, and dangerous actions are harness-gated. Models and IDEs will churn; this operating system will not.
+>
+> Inherits global developer invariants, schedule boundaries, communication tone, and MCP tooling from [../AGENTS.md](../AGENTS.md).
 
 ---
 
