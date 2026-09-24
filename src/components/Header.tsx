@@ -49,7 +49,14 @@ export function Header({
             <span className="font-bold tracking-wide">SUBURBAN WASTE SERVICES</span>
             <span className="text-red-200 hidden sm:inline">• Savage & Eden Prairie, MN</span>
           </div>
-          <div className="flex items-center gap-3 sm:gap-6 text-slate-200 text-xs sm:text-sm">
+          <div className="flex items-center gap-2 sm:gap-4 text-slate-200 text-xs sm:text-sm">
+            <Link
+              href="/admin"
+              className="flex items-center gap-1.5 bg-black/25 hover:bg-black/40 text-red-100 hover:text-white px-2.5 py-1 rounded-lg transition-colors font-bold text-xs border border-red-900/50"
+              title="SWS Front-Office Operations Admin Portal"
+            >
+              <span>🛡️ Staff Admin Portal</span>
+            </Link>
             <a
               href="tel:9529378900"
               className="flex items-center gap-1.5 hover:text-white font-semibold transition-colors"
@@ -212,6 +219,15 @@ export function Header({
               Presenter & Strategy Decks
             </span>
             <div className="flex flex-wrap gap-2 text-xs">
+              <Link
+                href="/admin"
+                onClick={() => setMobileMenuOpen(false)}
+                className="bg-indigo-900 hover:bg-indigo-800 text-white px-3 py-2 rounded-xl font-bold flex items-center gap-1.5 text-xs shadow-xs"
+              >
+                <span>🛡️ Staff Admin Portal</span>
+                <ExternalLink className="w-3 h-3" />
+              </Link>
+
               <Link
                 href="/family-pitch"
                 onClick={() => setMobileMenuOpen(false)}

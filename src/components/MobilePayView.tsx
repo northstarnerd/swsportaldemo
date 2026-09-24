@@ -85,11 +85,25 @@ export function MobilePayView({ initialDetails }: MobilePayViewProps) {
       });
   }, [details.amount]);
 
-  const handleSuccessfulPayment = () => {
+  const handleSuccessfulPayment = (method?: string) => {
     setIsProcessing(false);
     setIsPaid(true);
     const code = "SWS-" + Math.floor(100000 + Math.random() * 900000);
     setConfirmationCode(code);
+    const paymentMethod = method || (platform === "apple" ? "Apple Pay" : "Google Pay");
+
+    // Live sync with SWS Front-Office Admin Portal
+    fetch("/api/admin/payments/status", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        accountNumber: details.accountNumber,
+        customerName: details.customerName,
+        amount: details.amount,
+        paymentMethod,
+        confirmationCode: code,
+      }),
+    }).catch(() => {});
 
     confetti({
       particleCount: 90,
@@ -101,7 +115,7 @@ export function MobilePayView({ initialDetails }: MobilePayViewProps) {
   const handleSimulated1Tap = () => {
     setIsProcessing(true);
     setTimeout(() => {
-      handleSuccessfulPayment();
+      handleSuccessfulPayment(platform === "apple" ? "Apple Pay" : "Google Pay");
     }, 1400);
   };
 
@@ -115,7 +129,7 @@ export function MobilePayView({ initialDetails }: MobilePayViewProps) {
     e.preventDefault();
     setIsProcessing(true);
     setTimeout(() => {
-      handleSuccessfulPayment();
+      handleSuccessfulPayment("Credit Card (Visa •••• 4242)");
     }, 1200);
   };
 

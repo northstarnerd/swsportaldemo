@@ -27,6 +27,15 @@ export function DemoToolbar({
 }: DemoToolbarProps) {
   return (
     <div className="hidden md:flex fixed bottom-3 left-1/2 -translate-x-1/2 z-40 bg-slate-950/90 hover:bg-slate-950 backdrop-blur-md border border-slate-800 text-white rounded-2xl px-3 py-1.5 shadow-2xl items-center gap-2 text-xs transition-all">
+      {/* Staff Admin Portal Link */}
+      <Link
+        href="/admin"
+        className="bg-indigo-700 hover:bg-indigo-600 text-white px-2.5 py-1 rounded-lg font-bold flex items-center gap-1 transition-colors shadow-sm"
+        title="SWS Front-Office Operations Admin Portal"
+      >
+        <span>🛡️ Staff Admin Portal</span>
+      </Link>
+
       {/* Slide Deck Links */}
       <Link
         href="/family-pitch"

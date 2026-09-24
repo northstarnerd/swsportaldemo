@@ -32,7 +32,7 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the portal.
+Open [http://localhost:3002](http://localhost:3002) to view the portal.
 
 ## Deployment
 

@@ -104,6 +104,19 @@ export function PaymentModal({
       colors: ["#7A1900", "#10B981", "#3B82F6", "#F59E0B"],
     });
 
+    // Sync live payment status with SWS Admin Portal
+    fetch("/api/admin/payments/status", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        accountNumber: "89545",
+        customerName: cardName || "Patrick Badley",
+        amount,
+        paymentMethod: paymentMethod === "apple" ? "Apple Pay" : paymentMethod === "google" ? "Google Pay" : "Credit Card",
+        confirmationCode: `SWS-${Math.floor(100000 + Math.random() * 900000)}`,
+      }),
+    }).catch(() => {});
+
     setTimeout(() => {
       onSuccess();
       onClose();

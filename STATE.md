@@ -10,6 +10,26 @@
 ## 🎯 Current Objectives & Status
 
 ### Completed Milestones
+- [x] **SWS Front-Office Operations Admin Portal (`/admin`) (Session 2026-09-23/24):**
+  - [x] Engineered dedicated operations console at `/admin` for Susie Scott (Office Manager) and front-desk dispatch staff.
+  - [x] **View 1: Past-Due SMS Recovery Batch:**
+    - Live metric stats bar: Total Delinquent ($4,725.00 / 50 accounts), Messages Sent, Collected to Date, Recovery Rate (%).
+    - Drag-and-drop CSV importer + `[ ⚡ Load SWS Sample Batch (5 Accounts) ]` preloading 5 Eden Prairie accounts.
+    - Inline editable demo cell field for Patrick Badley (`SWS-89545`) with `[ 📱 Fill My Cell ]` memory.
+    - Primary batch action: `[ 🚀 Launch 1-Click Text Alerts (X Accounts) ]` with sequential SMS dispatch & progress bar.
+    - ERP Reconciliation: `[ 📥 Download Navusoft Cash Posting File ]` exporting ready-to-post CSV format (`AccountNumber,AmountPaid,AuthCode,PaymentMethod,Timestamp,Status`).
+  - [x] **View 2: Send Instant Payment Link (Front-Desk Call-In Tool):**
+    - Fast single-customer tool for incoming phone calls from residents with expired cards or balance inquiries.
+    - Phone mask input, quick fill presets (`[ 📱 Fill My Cell (Patrick) ]`, `[ 🏢 SWS Office ]`, `[ 🧑 Resident Demo ]`).
+    - Amount presets (`$94.50`, `$126.93`, `$45.00`) and service memo selector.
+    - Primary button `[ 💬 Dispatch Instant Payment Link via Text ]` calling `/api/sms/send-recovery`.
+    - Live transaction card with message preview, clickable link, copy fallback, and real-time status flipping from `"Awaiting Customer Payment"` to `"✓ Paid ($94.50 via Apple Pay)"`.
+  - [x] **Live Cross-Device Synchronization:**
+    - Created in-memory status store in `src/lib/paymentStore.ts` and sync API at `/api/admin/payments/status`.
+    - Hooked `MobilePayView.tsx` and `PaymentModal.tsx` to automatically report payment authorizations.
+    - Auto-polling (2.5s) on `/admin` updates both the batch table and call-in transaction card in real time with celebratory confetti.
+  - [x] **Cross-Portal Navigation:**
+    - Added `[ 🛡️ Staff Admin Portal ]` directly to `DemoToolbar.tsx` and `Header.tsx`.
 - [x] **URL-Isolated Multi-Demo Suite Scaffolding (Session 2026-09-21):**
   - [x] Engineered clean URL-driven routing structure under `/demos/*` with $0 extra Vercel cost.
   - [x] Enforced strict invariant: zero switcher toggles or cross-demo links on customer pages.

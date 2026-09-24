@@ -22,7 +22,7 @@ export async function POST(request: Request) {
       request.headers.get("origin") ||
       request.headers.get("x-forwarded-host") ||
       request.headers.get("host") ||
-      "http://localhost:3000";
+      "http://localhost:3002";
 
     const protocol = origin.startsWith("http")
       ? ""
