@@ -9,7 +9,6 @@ import {
   Upload,
   CheckCircle2,
   Clock,
-  AlertCircle,
   Copy,
   ExternalLink,
   RotateCcw,
@@ -130,7 +129,7 @@ export default function AdminPortalPage() {
   const [lastSyncTime, setLastSyncTime] = useState<Date>(new Date());
   const [knownPaidAccounts, setKnownPaidAccounts] = useState<Set<string>>(new Set());
 
-  // Load saved Patrick Cell from localStorage if available
+  // Load saved cell from localStorage if available
   useEffect(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("sws_demo_cell");
@@ -144,7 +143,6 @@ export default function AdminPortalPage() {
     }
   }, []);
 
-  // Save Patrick cell helper
   const handleSaveMyCell = (newNumber: string) => {
     setMyCellPhone(newNumber);
     if (typeof window !== "undefined") {
@@ -194,7 +192,6 @@ export default function AdminPortalPage() {
             })
           );
 
-          // Also check instant call-in result if currently awaiting payment
           if (instantSentResult) {
             const instNorm = instantSentResult.accountNumber.trim().toUpperCase();
             const matchingPayment = data.payments.find((p: any) => {
@@ -213,23 +210,22 @@ export default function AdminPortalPage() {
 
           if (newPaymentFound) {
             confetti({
-              particleCount: 75,
+              particleCount: 70,
               spread: 60,
               origin: { y: 0.5 },
-              colors: ["#10B981", "#7A1900", "#3B82F6", "#F59E0B"],
+              colors: ["#10B981", "#7A1900", "#2563EB"],
             });
           }
         }
-      } catch (err) {
-        // Silent fail on network poll jitter
+      } catch {
+        // Silent fail on network poll
       }
     }, 2500);
 
     return () => clearInterval(pollInterval);
   }, [instantSentResult, knownPaidAccounts]);
 
-  // Derived Summary Metrics
-  // Base batch of 50 accounts: total cohort is $4,725.00
+  // Derived Metrics
   const baselineCohortDelinquent = 4725.0;
   const currentBatchTotal = accounts.reduce((acc, curr) => acc + curr.amountDue, 0);
   const paidAccounts = accounts.filter((a) => a.smsStatus === "Paid");
@@ -238,17 +234,12 @@ export default function AdminPortalPage() {
   const recoveryRate =
     currentBatchTotal > 0 ? ((totalCollected / currentBatchTotal) * 100).toFixed(1) : "0.0";
 
-  // CSV Drag and Drop Handler
+  // CSV Ingestion Handler
   const handleCsvText = (csvContent: string) => {
     try {
       const lines = csvContent.split(/\r?\n/).filter((l) => l.trim().length > 0);
       if (lines.length < 2) {
         setUploadNotice("CSV is empty or missing data rows.");
-        return;
-      }
-      const headerLine = lines[0].toLowerCase();
-      if (!headerLine.includes("account") && !headerLine.includes("name")) {
-        setUploadNotice("Invalid CSV headers. Required: AccountNumber,CustomerName,PhoneNumber,AmountDue,Service");
         return;
       }
 
@@ -282,12 +273,12 @@ export default function AdminPortalPage() {
 
       if (parsed.length > 0) {
         setAccounts(parsed);
-        setUploadNotice(`✓ Successfully imported ${parsed.length} delinquent accounts from CSV.`);
+        setUploadNotice(`✓ Successfully loaded ${parsed.length} accounts from CSV.`);
       } else {
         setUploadNotice("Could not parse valid accounts from file.");
       }
     } catch (e: any) {
-      setUploadNotice("Error parsing CSV: " + (e.message || "Unknown error"));
+      setUploadNotice("Error reading CSV: " + (e.message || "Unknown error"));
     }
   };
 
@@ -324,7 +315,7 @@ export default function AdminPortalPage() {
     }
   };
 
-  // Batch Launch 1-Click Text Alerts
+  // Batch Launch
   const handleLaunchBatch = async () => {
     const toSend = accounts.filter((a) => a.smsStatus === "Draft");
     if (toSend.length === 0) return;
@@ -348,8 +339,7 @@ export default function AdminPortalPage() {
         setAccounts([...updated]);
 
         setBatchProgress({ sent: i + 1, total: toSend.length });
-        // Realistic visual pacing delay between SMS dispatches
-        await new Promise((r) => setTimeout(r, 450));
+        await new Promise((r) => setTimeout(r, 400));
       }
     }
 
@@ -391,16 +381,16 @@ export default function AdminPortalPage() {
         accountNumber: callInAccount,
         customerName: callInName,
         amount: callInAmount,
-        dispatchedAt: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" }),
+        dispatchedAt: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       });
     } catch (err: any) {
-      alert("Failed to send link: " + (err.message || "Network error"));
+      alert("Failed to send text: " + (err.message || "Network error"));
     } finally {
       setIsDispatchingInstant(false);
     }
   };
 
-  // Simulate Instant Payment for Call-In or Table Row
+  // Simulate Payment
   const handleSimulatePayment = async (accNum: string, name: string, amt: number) => {
     try {
       const code = `SWS-${Math.floor(100000 + Math.random() * 900000)}`;
@@ -416,7 +406,6 @@ export default function AdminPortalPage() {
         }),
       });
 
-      // Update local state immediately
       setAccounts((prev) =>
         prev.map((a) =>
           a.accountNumber === accNum
@@ -432,10 +421,10 @@ export default function AdminPortalPage() {
       );
 
       confetti({
-        particleCount: 80,
-        spread: 70,
+        particleCount: 60,
+        spread: 60,
         origin: { y: 0.6 },
-        colors: ["#10B981", "#7A1900", "#3B82F6"],
+        colors: ["#10B981", "#7A1900", "#2563EB"],
       });
     } catch (e) {
       console.error(e);
@@ -445,8 +434,6 @@ export default function AdminPortalPage() {
   // Download Navusoft Cash Posting CSV
   const handleDownloadNavusoftCsv = () => {
     const rowsToExport = accounts.filter((a) => a.smsStatus === "Paid");
-    
-    // If no accounts paid yet, create a clean sample export with demonstration rows
     const exportData =
       rowsToExport.length > 0
         ? rowsToExport
@@ -493,7 +480,7 @@ export default function AdminPortalPage() {
     document.body.removeChild(link);
   };
 
-  // Reset Demo State
+  // Reset State
   const handleResetDemo = async () => {
     await fetch("/api/admin/payments/status", {
       method: "POST",
@@ -516,14 +503,12 @@ export default function AdminPortalPage() {
     setKnownPaidAccounts(new Set());
   };
 
-  // Copy URL to Clipboard helper
   const copyToClipboard = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  // Filtered accounts for search
   const filteredAccounts = accounts.filter(
     (a) =>
       a.accountNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -541,222 +526,175 @@ export default function AdminPortalPage() {
     );
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
-      {/* Top Operations Header */}
-      <header className="bg-slate-900 border-b border-slate-800 sticky top-0 z-30 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
-          {/* SWS Branding */}
-          <div className="flex items-center gap-3.5">
-            <div className="p-2 bg-white rounded-xl shadow-md border border-slate-200 flex-shrink-0">
-              <img
-                src="/sws-logo.png"
-                alt="Suburban Waste Services"
-                className="h-8 w-auto object-contain"
-              />
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex flex-col">
+      {/* 1. Traditional Corporate SWS Top Utility Header */}
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
+        <div className="bg-[#7A1900] text-white text-xs py-2 px-4 sm:px-8">
+          <div className="max-w-7xl mx-auto flex justify-between items-center">
+            <div className="flex items-center gap-2 font-bold tracking-wide">
+              <span>SUBURBAN WASTE SERVICES</span>
+              <span className="text-red-200 hidden sm:inline">• Savage & Eden Prairie Dispatch Operations</span>
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-black text-lg tracking-tight text-white">
-                  Suburban Waste Services
-                </span>
-                <span className="text-xs bg-[#7A1900] text-red-100 font-bold px-2 py-0.5 rounded-full border border-red-800 uppercase tracking-wider">
-                  Front-Office Admin
-                </span>
-              </div>
-              <p className="text-xs text-slate-400 font-medium">
-                Savage & Eden Prairie Dispatch Operations • Susie Scott Console
+            <div className="flex items-center gap-3 text-red-100 text-xs">
+              <span className="hidden md:inline">Console User: Susie Scott (Office Manager)</span>
+              <span className="hidden md:inline">•</span>
+              <span className="flex items-center gap-1">
+                <span className="h-2 w-2 rounded-full bg-emerald-400"></span>
+                <span>Twilio SMS Ready</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Header Row */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <img
+              src="/sws-logo.png"
+              alt="Suburban Waste Services"
+              className="h-9 w-auto object-contain"
+            />
+            <div className="border-l border-slate-200 pl-3.5">
+              <h1 className="font-black text-lg text-slate-900 leading-tight">
+                Front-Office Staff Portal
+              </h1>
+              <p className="text-xs text-slate-500 font-medium">
+                Delinquent Account Recovery & 1-Tap Payment Link Dispatch
               </p>
             </div>
           </div>
 
-          {/* Controls: Mode Badges & Resident Portal Flip */}
-          <div className="flex items-center gap-3 text-xs">
-            {/* Live Carrier Status */}
-            <div className="hidden sm:flex items-center gap-2 bg-slate-800/80 border border-slate-700/80 rounded-xl px-3 py-1.5 text-slate-300">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-              </span>
-              <span className="font-semibold">Twilio SMS Ready</span>
-            </div>
-
-            {/* Live Polling Sync Status */}
-            <div
-              className="flex items-center gap-1.5 bg-emerald-950/50 border border-emerald-800/60 text-emerald-400 rounded-xl px-3 py-1.5 font-medium"
-              title={`Last checked ${lastSyncTime.toLocaleTimeString()}`}
-            >
-              <RefreshCw className="w-3.5 h-3.5 animate-spin" style={{ animationDuration: "6s" }} />
-              <span>Live Phone Sync Active</span>
-            </div>
-
-            {/* Reset Demo */}
+          {/* Quick Header Controls */}
+          <div className="flex items-center gap-2.5 text-xs">
             <button
               onClick={handleResetDemo}
-              className="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 rounded-xl px-3 py-1.5 font-semibold transition-colors flex items-center gap-1.5"
-              title="Reset sample accounts and payment status"
+              className="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 px-3 py-1.5 rounded-lg font-semibold transition-colors flex items-center gap-1.5"
+              title="Reset accounts to initial demo state"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span className="hidden md:inline">Reset State</span>
+              <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
+              <span>Reset Demo State</span>
             </button>
 
-            {/* Flip back to Resident Portal */}
             <Link
               href="/"
-              className="bg-[#7A1900] hover:bg-[#5f1300] text-white rounded-xl px-3.5 py-1.5 font-bold shadow-md transition-all flex items-center gap-1.5 hover:scale-[1.02]"
+              className="bg-[#7A1900] hover:bg-[#5f1300] text-white px-3.5 py-1.5 rounded-lg font-bold shadow-xs transition-colors flex items-center gap-1.5"
             >
-              <span>📱 Resident Portal</span>
+              <span>📱 View Resident Portal</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
         </div>
 
-        {/* Tab Navigation */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-800/80 flex items-center justify-between">
-          <nav className="flex space-x-1 sm:space-x-4 py-2" aria-label="Tabs">
+        {/* Traditional Corporate Tab Bar */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 border-t border-slate-200 flex justify-between items-center">
+          <nav className="flex space-x-2 -mb-px text-sm font-bold">
             <button
               onClick={() => setActiveTab("batch")}
-              className={`flex items-center gap-2 py-2 px-3.5 rounded-xl font-bold text-sm transition-all ${
+              className={`py-3 px-4 border-b-2 transition-colors flex items-center gap-2 ${
                 activeTab === "batch"
-                  ? "bg-slate-800 text-white shadow-sm border border-slate-700"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"
+                  ? "border-[#7A1900] text-[#7A1900] bg-slate-50/80"
+                  : "border-transparent text-slate-600 hover:text-slate-900 hover:border-slate-300"
               }`}
             >
-              <FileSpreadsheet className="w-4 h-4 text-[#C9381A]" />
-              <span>Past-Due SMS Recovery Batch</span>
-              <span className="ml-1 text-xs bg-red-950 text-red-300 border border-red-900 px-2 py-0.5 rounded-full font-bold">
+              <FileSpreadsheet className="w-4 h-4" />
+              <span>1. Past-Due SMS Recovery Batch</span>
+              <span className="text-xs bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full font-bold">
                 {accounts.length}
               </span>
             </button>
 
             <button
               onClick={() => setActiveTab("instant")}
-              className={`flex items-center gap-2 py-2 px-3.5 rounded-xl font-bold text-sm transition-all ${
+              className={`py-3 px-4 border-b-2 transition-colors flex items-center gap-2 ${
                 activeTab === "instant"
-                  ? "bg-slate-800 text-white shadow-sm border border-slate-700"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"
+                  ? "border-[#7A1900] text-[#7A1900] bg-slate-50/80"
+                  : "border-transparent text-slate-600 hover:text-slate-900 hover:border-slate-300"
               }`}
             >
-              <Phone className="w-4 h-4 text-emerald-400" />
-              <span>Send Instant Payment Link</span>
-              <span className="text-xs bg-emerald-950 text-emerald-300 border border-emerald-900 px-2 py-0.5 rounded-full font-bold">
-                Front-Desk Call-In
+              <Phone className="w-4 h-4" />
+              <span>2. Front-Desk Phone Call Tool</span>
+              <span className="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">
+                Instant Link
               </span>
             </button>
           </nav>
 
-          <div className="hidden lg:flex items-center gap-2 text-xs text-slate-400">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span>Zero Raw PAN Storage • PCI-DSS Boundary Enforced</span>
+          <div className="hidden lg:flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+            <span>PCI-DSS Level 1 Compliant • No Card Data Stored on SWS Servers</span>
           </div>
         </div>
       </header>
 
-      {/* Main Body Content */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      {/* Main Content Area */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-8 py-6 space-y-6">
         {/* VIEW 1: TAB 1 — PAST-DUE SMS RECOVERY BATCH */}
         {activeTab === "batch" && (
           <div className="space-y-6 animate-fade-in">
-            {/* 1. Top Metric Stats Bar */}
+            {/* Top Metric Cards */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* Total Delinquent */}
-              <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg relative overflow-hidden">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                      Total Delinquent
-                    </p>
-                    <p className="text-2xl sm:text-3xl font-black text-white mt-1">
-                      ${baselineCohortDelinquent.toLocaleString("en-US", { minimumFractionDigits: 2 })}
-                    </p>
-                    <p className="text-xs text-slate-400 mt-1 font-medium">
-                      50 accounts on Route 4 (Eden Prairie)
-                    </p>
-                  </div>
-                  <div className="w-10 h-10 rounded-xl bg-red-950/60 border border-red-900/40 text-red-400 flex items-center justify-center">
-                    <DollarSign className="w-5 h-5" />
-                  </div>
-                </div>
+              <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Total Delinquent Batch
+                </span>
+                <p className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+                  ${baselineCohortDelinquent.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                </p>
+                <p className="text-xs text-slate-500 mt-0.5">50 Accounts on Route 4</p>
               </div>
 
-              {/* Messages Sent */}
-              <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg relative overflow-hidden">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                      Messages Sent
-                    </p>
-                    <p className="text-2xl sm:text-3xl font-black text-blue-400 mt-1">
-                      {totalSent} <span className="text-sm font-semibold text-slate-400">/ {accounts.length}</span>
-                    </p>
-                    <p className="text-xs text-slate-400 mt-1 font-medium">
-                      1-click recovery alerts dispatched
-                    </p>
-                  </div>
-                  <div className="w-10 h-10 rounded-xl bg-blue-950/60 border border-blue-900/40 text-blue-400 flex items-center justify-center">
-                    <Send className="w-5 h-5" />
-                  </div>
-                </div>
+              <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Messages Dispatched
+                </span>
+                <p className="text-2xl sm:text-3xl font-black text-blue-700 mt-1">
+                  {totalSent} <span className="text-sm font-semibold text-slate-500">/ {accounts.length}</span>
+                </p>
+                <p className="text-xs text-slate-500 mt-0.5">1-click mobile alerts sent</p>
               </div>
 
-              {/* Collected to Date */}
-              <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg relative overflow-hidden">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                      Collected to Date
-                    </p>
-                    <p className="text-2xl sm:text-3xl font-black text-emerald-400 mt-1">
-                      ${totalCollected.toLocaleString("en-US", { minimumFractionDigits: 2 })}
-                    </p>
-                    <p className="text-xs text-emerald-500 mt-1 font-semibold flex items-center gap-1">
-                      <Sparkles className="w-3 h-3" />
-                      <span>{paidAccounts.length} accounts settled</span>
-                    </p>
-                  </div>
-                  <div className="w-10 h-10 rounded-xl bg-emerald-950/60 border border-emerald-900/40 text-emerald-400 flex items-center justify-center">
-                    <CheckCircle2 className="w-5 h-5" />
-                  </div>
-                </div>
+              <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Collected to Date
+                </span>
+                <p className="text-2xl sm:text-3xl font-black text-emerald-600 mt-1">
+                  ${totalCollected.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                </p>
+                <p className="text-xs text-emerald-700 font-semibold mt-0.5">
+                  ✓ {paidAccounts.length} accounts settled
+                </p>
               </div>
 
-              {/* Recovery Rate */}
-              <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg relative overflow-hidden">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                      Recovery Rate
-                    </p>
-                    <p className="text-2xl sm:text-3xl font-black text-white mt-1">
-                      {recoveryRate}%
-                    </p>
-                    <div className="w-32 bg-slate-800 h-1.5 rounded-full mt-2 overflow-hidden">
-                      <div
-                        className="bg-emerald-500 h-full rounded-full transition-all duration-500"
-                        style={{ width: `${Math.min(parseFloat(recoveryRate), 100)}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                  <div className="w-10 h-10 rounded-xl bg-purple-950/60 border border-purple-900/40 text-purple-400 flex items-center justify-center">
-                    <TrendingUp className="w-5 h-5" />
-                  </div>
+              <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Recovery Rate
+                </span>
+                <p className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+                  {recoveryRate}%
+                </p>
+                <div className="w-full bg-slate-100 h-2 rounded-full mt-2 overflow-hidden border border-slate-200">
+                  <div
+                    className="bg-emerald-600 h-full rounded-full transition-all duration-500"
+                    style={{ width: `${Math.min(parseFloat(recoveryRate), 100)}%` }}
+                  ></div>
                 </div>
               </div>
             </div>
 
-            {/* 2. File Upload / Quick Demo Loader Card */}
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+            {/* Batch File Management & Demo Loader Box */}
+            <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-4">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-base font-bold text-white flex items-center gap-2">
-                    <Upload className="w-4 h-4 text-[#C9381A]" />
-                    <span>Quarterly Delinquent Batch Ingestion</span>
+                  <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                    <FileSpreadsheet className="w-5 h-5 text-[#7A1900]" />
+                    <span>Quarterly Delinquent Account File Ingestion</span>
                   </h2>
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    Drag & drop Navusoft delinquent aging export or load the verified Eden Prairie test cohort.
+                  <p className="text-xs text-slate-600 mt-0.5">
+                    Import delinquent accounts from Navusoft, or use our verified 5-account sample batch.
                   </p>
                 </div>
 
-                {/* MANDATORY 1-Click Demo Button */}
+                {/* Primary Actions */}
                 <div className="flex flex-wrap items-center gap-2">
                   <button
                     onClick={() => {
@@ -769,7 +707,7 @@ export default function AdminPortalPage() {
                       );
                       setUploadNotice("⚡ Loaded 5 Eden Prairie delinquent accounts for Route 4.");
                     }}
-                    className="bg-gradient-to-r from-[#7A1900] to-[#A02409] hover:from-[#911e00] hover:to-[#b82b0b] text-white px-4 py-2.5 rounded-xl font-black text-xs sm:text-sm shadow-lg flex items-center gap-2 transition-all transform active:scale-98"
+                    className="bg-[#7A1900] hover:bg-[#5f1300] text-white px-4 py-2 rounded-lg font-bold text-xs sm:text-sm shadow-xs flex items-center gap-1.5 transition-colors"
                   >
                     <Zap className="w-4 h-4 text-amber-300" />
                     <span>⚡ Load SWS Sample Batch (5 Accounts)</span>
@@ -778,18 +716,18 @@ export default function AdminPortalPage() {
                   <a
                     href="/sws_sample_delinquent_batch.csv"
                     download="sws_sample_delinquent_batch.csv"
-                    className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-2.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-colors"
-                    title="Download ready-to-upload demo CSV template to your computer"
+                    className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 px-3 py-2 rounded-lg font-bold text-xs flex items-center gap-1.5 transition-colors"
+                    title="Download demo CSV file to your desktop"
                   >
-                    <Download className="w-3.5 h-3.5 text-slate-400" />
+                    <Download className="w-3.5 h-3.5 text-slate-500" />
                     <span>Download Demo CSV</span>
                   </a>
 
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-2.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-colors"
+                    className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 px-3 py-2 rounded-lg font-bold text-xs flex items-center gap-1.5 transition-colors"
                   >
-                    <Upload className="w-3.5 h-3.5 text-slate-400" />
+                    <Upload className="w-3.5 h-3.5 text-slate-500" />
                     <span>Import Custom CSV</span>
                   </button>
                   <input
@@ -802,7 +740,7 @@ export default function AdminPortalPage() {
                 </div>
               </div>
 
-              {/* Drag & Drop Dropzone */}
+              {/* Clean Upload Dropzone */}
               <div
                 onDragOver={(e) => {
                   e.preventDefault();
@@ -822,118 +760,106 @@ export default function AdminPortalPage() {
                     reader.readAsText(file);
                   }
                 }}
-                className={`border-2 border-dashed rounded-xl p-4 text-center transition-colors ${
+                className={`border-2 border-dashed rounded-lg p-3.5 text-center text-xs transition-colors ${
                   isDragging
-                    ? "border-emerald-500 bg-emerald-950/20 text-emerald-200"
-                    : "border-slate-800 hover:border-slate-700 bg-slate-950/50 text-slate-400"
+                    ? "border-emerald-500 bg-emerald-50 text-emerald-800"
+                    : "border-slate-300 hover:border-slate-400 bg-slate-50/60 text-slate-600"
                 }`}
               >
-                <p className="text-xs">
-                  Drop Navusoft CSV here or click Import. Accepted columns:{" "}
-                  <code className="bg-slate-800 text-slate-200 px-1.5 py-0.5 rounded font-mono">
-                    AccountNumber,CustomerName,PhoneNumber,AmountDue,Service
-                  </code>
-                </p>
+                <span>
+                  Drop Navusoft delinquent CSV file here (e.g.{" "}
+                  <strong className="font-mono text-slate-800">sws_sample_delinquent_batch.csv</strong>) or click
+                  Import Custom CSV above.
+                </span>
                 {uploadNotice && (
-                  <p className="text-xs font-semibold text-emerald-400 mt-2">{uploadNotice}</p>
+                  <p className="text-xs font-bold text-emerald-700 mt-1">{uploadNotice}</p>
                 )}
               </div>
 
-              {/* Demo Account Mobile Phone Quick Edit Bar */}
-              <div className="bg-amber-950/30 border border-amber-900/50 rounded-xl p-3 flex flex-wrap items-center justify-between gap-3 text-xs">
-                <div className="flex items-center gap-2 text-amber-200">
-                  <Smartphone className="w-4 h-4 text-amber-400 shrink-0" />
+              {/* Demo Cell Phone Notice */}
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 flex flex-wrap items-center justify-between gap-2 text-xs text-amber-900">
+                <div className="flex items-center gap-2">
+                  <Smartphone className="w-4 h-4 text-amber-700 shrink-0" />
                   <span>
-                    <strong>Live Demo Cell Config:</strong> Account <strong>SWS-89545</strong> (Patrick Badley) will receive texts at:{" "}
-                    <span className="font-mono font-bold text-white bg-amber-900/60 px-2 py-0.5 rounded">
-                      {accounts.find((a) => a.isDemoTarget)?.phoneNumber || "(612) 555-0192"}
-                    </span>
+                    <strong>Live Demo Mobile Phone:</strong> Account <strong>SWS-89545</strong> (Patrick Badley) will send texts to{" "}
+                    <strong className="font-mono bg-amber-100 px-2 py-0.5 rounded text-amber-900">
+                      {accounts.find((a) => a.isDemoTarget)?.phoneNumber || "(614) 562-0309"}
+                    </strong>
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  {!isEditingCell ? (
+                {!isEditingCell ? (
+                  <button
+                    onClick={() => setIsEditingCell(true)}
+                    className="text-amber-800 hover:text-amber-900 font-bold underline text-xs"
+                  >
+                    Change Phone Number
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-1.5">
+                    <input
+                      type="text"
+                      defaultValue={accounts.find((a) => a.isDemoTarget)?.phoneNumber || "(614) 562-0309"}
+                      id="demo-cell-edit-input"
+                      className="bg-white border border-amber-400 rounded px-2 py-0.5 text-xs text-slate-900 font-mono focus:outline-none w-36"
+                    />
                     <button
-                      onClick={() => setIsEditingCell(true)}
-                      className="bg-amber-800 hover:bg-amber-700 text-amber-100 font-bold px-2.5 py-1 rounded-lg transition-colors text-xs"
+                      onClick={() => {
+                        const input = document.getElementById("demo-cell-edit-input") as HTMLInputElement;
+                        if (input) handleSaveMyCell(input.value);
+                      }}
+                      className="bg-amber-800 hover:bg-amber-700 text-white font-bold px-2 py-0.5 rounded text-xs"
                     >
-                      ✏️ Change Cell Number
+                      Save
                     </button>
-                  ) : (
-                    <div className="flex items-center gap-1.5">
-                      <input
-                        type="text"
-                        placeholder="e.g. 6125550192"
-                        defaultValue={accounts.find((a) => a.isDemoTarget)?.phoneNumber || ""}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            handleSaveMyCell((e.target as HTMLInputElement).value);
-                          }
-                        }}
-                        id="demo-cell-input"
-                        className="bg-slate-950 border border-amber-600 rounded-lg px-2.5 py-1 text-xs text-white placeholder-slate-500 w-36 font-mono focus:outline-none"
-                      />
-                      <button
-                        onClick={() => {
-                          const input = document.getElementById("demo-cell-input") as HTMLInputElement;
-                          if (input) handleSaveMyCell(input.value);
-                        }}
-                        className="bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-2.5 py-1 rounded-lg text-xs"
-                      >
-                        Save
-                      </button>
-                    </div>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* 3. Action Toolbar & Accounts Campaign Table */}
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden space-y-0">
-              {/* Table Action Header */}
-              <div className="p-4 sm:p-5 border-b border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-900/80">
-                <div className="flex items-center gap-3">
-                  {/* Primary Batch Action Button */}
+            {/* Campaign Table Card */}
+            <div className="bg-white border border-slate-200 rounded-xl shadow-xs overflow-hidden space-y-0">
+              {/* Action Toolbar above table */}
+              <div className="p-4 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3 bg-slate-50/50">
+                <div className="flex flex-wrap items-center gap-2.5">
                   <button
                     onClick={handleLaunchBatch}
                     disabled={isBatchSending || accounts.every((a) => a.smsStatus !== "Draft")}
-                    className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 text-white font-black text-sm px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 transition-all active:scale-98"
+                    className="bg-[#7A1900] hover:bg-[#5f1300] disabled:opacity-50 text-white font-bold text-xs sm:text-sm px-4 py-2 rounded-lg shadow-xs flex items-center gap-2 transition-colors"
                   >
                     {isBatchSending ? (
                       <>
                         <RefreshCw className="w-4 h-4 animate-spin" />
                         <span>
-                          Dispatching ({batchProgress?.sent} / {batchProgress?.total})...
+                          Sending ({batchProgress?.sent} of {batchProgress?.total})...
                         </span>
                       </>
                     ) : (
                       <>
                         <Send className="w-4 h-4" />
                         <span>
-                          🚀 Launch 1-Click Text Alerts (
-                          {accounts.filter((a) => a.smsStatus === "Draft").length} Accounts)
+                          🚀 Send Text Alerts to All ({accounts.filter((a) => a.smsStatus === "Draft").length}) Accounts
                         </span>
                       </>
                     )}
                   </button>
 
-                  {/* ERP Export Reconciliation Button */}
                   <button
                     onClick={handleDownloadNavusoftCsv}
-                    className="bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm px-3.5 py-2.5 rounded-xl shadow-md flex items-center gap-2 transition-colors"
-                    title="Export settled payments into standard Navusoft cash posting batch CSV"
+                    className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs sm:text-sm px-3.5 py-2 rounded-lg shadow-xs flex items-center gap-1.5 transition-colors"
+                    title="Export settled payments to Navusoft cash posting format"
                   >
                     <Download className="w-4 h-4" />
-                    <span>📥 Download Navusoft Cash Posting File</span>
+                    <span>📥 Export to Navusoft Cash Receipts (.csv)</span>
                     {paidAccounts.length > 0 && (
-                      <span className="bg-emerald-600 text-white text-xs px-2 py-0.5 rounded-full font-bold">
-                        {paidAccounts.length} Ready
+                      <span className="bg-white text-emerald-800 text-xs px-2 py-0.5 rounded-full font-bold ml-1">
+                        {paidAccounts.length} Paid
                       </span>
                     )}
                   </button>
                 </div>
 
-                {/* Search / Filter */}
+                {/* Search Box */}
                 <div className="relative w-full md:w-64">
                   <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
@@ -941,121 +867,110 @@ export default function AdminPortalPage() {
                     placeholder="Search account or name..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-slate-600"
+                    className="w-full bg-white border border-slate-300 rounded-lg pl-9 pr-3 py-1.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-500"
                   />
                 </div>
               </div>
 
-              {/* Progress Bar when Sending */}
+              {/* Progress Indicator */}
               {isBatchSending && batchProgress && (
-                <div className="bg-slate-950 px-5 py-2 border-b border-slate-800">
-                  <div className="flex justify-between text-xs text-blue-300 font-semibold mb-1">
-                    <span>Dispatching Twilio SMS alerts to Eden Prairie Route 4...</span>
-                    <span>
-                      {Math.round((batchProgress.sent / batchProgress.total) * 100)}%
-                    </span>
-                  </div>
-                  <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                    <div
-                      className="bg-blue-500 h-full rounded-full transition-all duration-300"
-                      style={{
-                        width: `${(batchProgress.sent / batchProgress.total) * 100}%`,
-                      }}
-                    ></div>
-                  </div>
+                <div className="bg-blue-50 px-4 py-2 border-b border-blue-200 text-xs text-blue-900 font-semibold flex items-center justify-between">
+                  <span>Sending SMS alerts to residents...</span>
+                  <span>{Math.round((batchProgress.sent / batchProgress.total) * 100)}%</span>
                 </div>
               )}
 
-              {/* Accounts Table */}
+              {/* Classic Corporate Table */}
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs sm:text-sm text-slate-300 divide-y divide-slate-800">
-                  <thead className="bg-slate-950/70 text-slate-400 uppercase text-[11px] font-bold tracking-wider">
+                <table className="w-full text-left text-xs sm:text-sm text-slate-700 divide-y divide-slate-200">
+                  <thead className="bg-slate-100 text-slate-700 uppercase text-[11px] font-bold tracking-wider">
                     <tr>
-                      <th className="py-3.5 px-4">Account #</th>
-                      <th className="py-3.5 px-4">Customer Name & Address</th>
-                      <th className="py-3.5 px-4">Phone Number</th>
-                      <th className="py-3.5 px-4">Balance Due</th>
-                      <th className="py-3.5 px-4">SMS Recovery Status</th>
-                      <th className="py-3.5 px-4 text-right">Actions</th>
+                      <th className="py-3 px-4">Account #</th>
+                      <th className="py-3 px-4">Customer Name & Address</th>
+                      <th className="py-3 px-4">Phone Number</th>
+                      <th className="py-3 px-4">Amount Due</th>
+                      <th className="py-3 px-4">Status</th>
+                      <th className="py-3 px-4 text-right">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/80">
-                    {filteredAccounts.map((acc) => (
+                  <tbody className="divide-y divide-slate-200 bg-white">
+                    {filteredAccounts.map((acc, index) => (
                       <tr
                         key={acc.accountNumber}
-                        className={`hover:bg-slate-800/40 transition-colors ${
-                          acc.isDemoTarget ? "bg-amber-950/10" : ""
+                        className={`hover:bg-slate-50 transition-colors ${
+                          index % 2 === 1 ? "bg-slate-50/40" : "bg-white"
                         }`}
                       >
                         {/* Account # */}
-                        <td className="py-3.5 px-4 font-mono font-bold text-white whitespace-nowrap">
+                        <td className="py-3 px-4 font-mono font-bold text-slate-900 whitespace-nowrap">
                           <div className="flex items-center gap-1.5">
                             <span>{acc.accountNumber}</span>
                             {acc.isDemoTarget && (
-                              <span className="bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-black px-1.5 py-0.5 rounded">
+                              <span className="bg-amber-100 text-amber-800 border border-amber-300 text-[10px] font-black px-1.5 py-0.5 rounded">
                                 DEMO TARGET
                               </span>
                             )}
                           </div>
-                          <div className="text-[11px] text-slate-500 font-sans">Eden Prairie • R-04</div>
+                          <div className="text-[11px] text-slate-500 font-sans font-normal">
+                            Route 4 (Eden Prairie)
+                          </div>
                         </td>
 
                         {/* Customer Name & Address */}
-                        <td className="py-3.5 px-4">
-                          <div className="font-bold text-slate-100">{acc.customerName}</div>
-                          <div className="text-xs text-slate-400 truncate max-w-xs">{acc.service}</div>
+                        <td className="py-3 px-4">
+                          <div className="font-bold text-slate-900">{acc.customerName}</div>
+                          <div className="text-xs text-slate-500">{acc.service}</div>
                           {acc.address && (
-                            <div className="text-[11px] text-slate-500 truncate max-w-xs">{acc.address}</div>
+                            <div className="text-[11px] text-slate-400 truncate max-w-xs">{acc.address}</div>
                           )}
                         </td>
 
                         {/* Phone Number */}
-                        <td className="py-3.5 px-4 font-mono whitespace-nowrap text-slate-300">
+                        <td className="py-3 px-4 font-mono whitespace-nowrap text-slate-800">
                           {acc.phoneNumber}
                         </td>
 
-                        {/* Balance Due */}
-                        <td className="py-3.5 px-4 font-bold text-white whitespace-nowrap">
+                        {/* Amount Due */}
+                        <td className="py-3 px-4 font-bold text-slate-900 whitespace-nowrap">
                           ${acc.amountDue.toFixed(2)}
                         </td>
 
-                        {/* SMS Status */}
-                        <td className="py-3.5 px-4 whitespace-nowrap">
+                        {/* Status */}
+                        <td className="py-3 px-4 whitespace-nowrap">
                           {acc.smsStatus === "Draft" && (
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700">
-                              <Clock className="w-3 h-3" />
-                              <span>Draft</span>
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200">
+                              <Clock className="w-3 h-3 text-slate-400" />
+                              <span>Ready to Send</span>
                             </span>
                           )}
                           {acc.smsStatus === "Sending" && (
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-950 text-blue-300 border border-blue-800 animate-pulse">
-                              <RefreshCw className="w-3 h-3 animate-spin" />
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+                              <RefreshCw className="w-3 h-3 animate-spin text-blue-600" />
                               <span>Sending...</span>
                             </span>
                           )}
                           {acc.smsStatus === "Sent" && (
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-blue-950/80 text-blue-300 border border-blue-800">
-                              <Smartphone className="w-3 h-3 text-blue-400" />
-                              <span>Sent (Delivered)</span>
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-800 border border-blue-200">
+                              <Smartphone className="w-3 h-3 text-blue-600" />
+                              <span>Text Sent</span>
                             </span>
                           )}
                           {acc.smsStatus === "Paid" && (
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-black bg-emerald-950 text-emerald-300 border border-emerald-700 shadow-sm animate-fade-in">
-                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-black bg-emerald-100 text-emerald-800 border border-emerald-300">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                               <span>PAID - ${acc.amountDue.toFixed(2)}</span>
                             </span>
                           )}
                           {acc.paidAt && (
-                            <div className="text-[10px] text-emerald-400 mt-0.5 font-medium">
+                            <div className="text-[10px] text-emerald-700 mt-0.5 font-medium">
                               via {acc.paymentMethod || "Apple Pay"}
                             </div>
                           )}
                         </td>
 
                         {/* Actions */}
-                        <td className="py-3.5 px-4 text-right whitespace-nowrap">
+                        <td className="py-3 px-4 text-right whitespace-nowrap">
                           <div className="flex items-center justify-end gap-1.5">
-                            {/* Send Single Alert */}
                             {acc.smsStatus === "Draft" && (
                               <button
                                 onClick={async () => {
@@ -1070,28 +985,26 @@ export default function AdminPortalPage() {
                                     setAccounts([...updated]);
                                   }
                                 }}
-                                className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors"
+                                className="bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 px-2.5 py-1 rounded text-xs font-semibold transition-colors"
                               >
                                 Send Text
                               </button>
                             )}
 
-                            {/* Copy Link fallback */}
                             {acc.paymentUrl && (
                               <button
                                 onClick={() => copyToClipboard(acc.paymentUrl!, acc.accountNumber)}
-                                className="bg-slate-800 hover:bg-slate-700 text-slate-300 p-1.5 rounded-lg text-xs transition-colors"
-                                title="Copy 1-tap payment link"
+                                className="bg-slate-100 hover:bg-slate-200 text-slate-700 p-1.5 rounded border border-slate-200 text-xs transition-colors"
+                                title="Copy payment link"
                               >
                                 {copiedId === acc.accountNumber ? (
-                                  <Check className="w-3.5 h-3.5 text-emerald-400" />
+                                  <Check className="w-3.5 h-3.5 text-emerald-600" />
                                 ) : (
                                   <Copy className="w-3.5 h-3.5" />
                                 )}
                               </button>
                             )}
 
-                            {/* View / Open Pay Link */}
                             <a
                               href={
                                 acc.paymentUrl ||
@@ -1113,18 +1026,17 @@ export default function AdminPortalPage() {
                               }
                               target="_blank"
                               rel="noreferrer"
-                              className="bg-slate-800 hover:bg-slate-700 text-slate-300 p-1.5 rounded-lg text-xs transition-colors"
+                              className="bg-slate-100 hover:bg-slate-200 text-slate-700 p-1.5 rounded border border-slate-200 text-xs transition-colors"
                               title="Open resident pay view"
                             >
                               <ExternalLink className="w-3.5 h-3.5" />
                             </a>
 
-                            {/* Instant Demo Pay Simulation */}
                             {acc.smsStatus !== "Paid" && (
                               <button
                                 onClick={() => handleSimulatePayment(acc.accountNumber, acc.customerName, acc.amountDue)}
-                                className="bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-800 px-2.5 py-1 rounded-lg text-xs font-bold transition-all"
-                                title="Simulate 1-tap customer authorization"
+                                className="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-1 rounded text-xs font-bold transition-all"
+                                title="Test authorization simulation"
                               >
                                 ⚡ Simulate Pay
                               </button>
@@ -1140,75 +1052,65 @@ export default function AdminPortalPage() {
           </div>
         )}
 
-        {/* VIEW 2: TAB 2 — SEND INSTANT PAYMENT LINK (FRONT-DESK CALL-IN TOOL) */}
+        {/* VIEW 2: TAB 2 — FRONT-DESK PHONE CALL TOOL */}
         {activeTab === "instant" && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-fade-in">
-            {/* Left Column: Form */}
+            {/* Form Column */}
             <div className="lg:col-span-6 space-y-6">
-              <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-5">
+              <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs space-y-5">
                 <div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 text-xs font-bold mb-2">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-red-100 text-[#7A1900] text-xs font-bold mb-2">
                     <Phone className="w-3.5 h-3.5" />
-                    <span>Front-Desk Inbound Call Tool</span>
+                    <span>Inbound Resident Call Tool</span>
                   </div>
-                  <h2 className="text-xl font-black text-white">
-                    Dispatch Instant Mobile Payment Link
+                  <h2 className="text-xl font-black text-slate-900">
+                    Send Instant Payment Link to Resident
                   </h2>
-                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                    Customer on the line with an expired card? Text them a secure 1-tap Apple Pay / Google Pay link in 5 seconds while keeping them on the phone.
+                  <p className="text-xs text-slate-600 mt-1">
+                    When a customer calls in with an expired card or question, text them a secure 1-tap Apple Pay / Google Pay link while they are on the phone.
                   </p>
                 </div>
 
                 <form onSubmit={handleDispatchCallIn} className="space-y-4">
                   {/* Phone Input with Presets */}
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
                       Customer Mobile Phone Number
                     </label>
                     <input
                       type="tel"
                       required
-                      placeholder="(952) 937-8900"
+                      placeholder="(614) 562-0309"
                       value={callInPhone}
                       onChange={(e) => setCallInPhone(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-700 rounded-2xl px-4 py-3 text-sm text-white placeholder-slate-500 font-mono focus:outline-none focus:border-emerald-500"
+                      className="w-full bg-white border border-slate-300 rounded-lg px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 font-mono focus:outline-none focus:border-[#7A1900]"
                     />
 
                     {/* Quick Fill Presets */}
                     <div className="flex flex-wrap gap-1.5 pt-1">
                       <button
                         type="button"
-                        onClick={() => {
-                          if (myCellPhone) {
-                            setCallInPhone(myCellPhone);
-                          } else {
-                            const num = prompt("Enter your mobile number for live demo testing:");
-                            if (num) {
-                              handleSaveMyCell(num);
-                              setCallInPhone(num);
-                            }
-                          }
-                        }}
-                        className="bg-amber-950/60 hover:bg-amber-900 text-amber-300 border border-amber-800/80 px-2.5 py-1 rounded-lg text-xs font-bold transition-colors flex items-center gap-1"
+                        onClick={() => setCallInPhone("(614) 562-0309")}
+                        className="bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 px-2.5 py-1 rounded text-xs font-bold transition-colors flex items-center gap-1"
                       >
-                        <Smartphone className="w-3 h-3" />
-                        <span>📱 Fill My Cell (Patrick)</span>
+                        <Smartphone className="w-3 h-3 text-amber-700" />
+                        <span>📱 Fill Patrick's Cell (614-562-0309)</span>
                       </button>
 
                       <button
                         type="button"
                         onClick={() => setCallInPhone("(952) 937-8900")}
-                        className="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors"
+                        className="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 px-2.5 py-1 rounded text-xs font-semibold transition-colors"
                       >
                         🏢 SWS Office (952-937-8900)
                       </button>
 
                       <button
                         type="button"
-                        onClick={() => setCallInPhone("(612) 555-0192")}
-                        className="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors"
+                        onClick={() => setCallInPhone("(612) 555-0144")}
+                        className="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 px-2.5 py-1 rounded text-xs font-semibold transition-colors"
                       >
-                        🧑 Resident Demo (612-555-0192)
+                        🧑 Robert Miller (612-555-0144)
                       </button>
                     </div>
                   </div>
@@ -1216,7 +1118,7 @@ export default function AdminPortalPage() {
                   {/* Customer Name & Account */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                      <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
                         Customer Name
                       </label>
                       <input
@@ -1225,12 +1127,12 @@ export default function AdminPortalPage() {
                         value={callInName}
                         onChange={(e) => setCallInName(e.target.value)}
                         placeholder="Patrick Badley"
-                        className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500"
+                        className="w-full bg-white border border-slate-300 rounded-lg px-3.5 py-2 text-sm text-slate-900 focus:outline-none focus:border-[#7A1900]"
                       />
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                      <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
                         Account Number
                       </label>
                       <input
@@ -1239,7 +1141,7 @@ export default function AdminPortalPage() {
                         value={callInAccount}
                         onChange={(e) => setCallInAccount(e.target.value)}
                         placeholder="SWS-89545"
-                        className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm font-mono text-white focus:outline-none focus:border-emerald-500"
+                        className="w-full bg-white border border-slate-300 rounded-lg px-3.5 py-2 text-sm font-mono text-slate-900 focus:outline-none focus:border-[#7A1900]"
                       />
                     </div>
                   </div>
@@ -1247,13 +1149,13 @@ export default function AdminPortalPage() {
                   {/* Amount Due & Quick Chips */}
                   <div className="space-y-1.5">
                     <div className="flex justify-between items-baseline">
-                      <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                      <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
                         Amount Due ($)
                       </label>
-                      <span className="text-xs text-slate-400">Standard residential service rates</span>
+                      <span className="text-xs text-slate-500">Standard residential rates</span>
                     </div>
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">
+                      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 font-bold">
                         $
                       </span>
                       <input
@@ -1262,19 +1164,19 @@ export default function AdminPortalPage() {
                         required
                         value={callInAmount}
                         onChange={(e) => setCallInAmount(parseFloat(e.target.value) || 0)}
-                        className="w-full bg-slate-950 border border-slate-700 rounded-xl pl-8 pr-4 py-2.5 text-base font-bold text-white focus:outline-none focus:border-emerald-500"
+                        className="w-full bg-white border border-slate-300 rounded-lg pl-8 pr-3.5 py-2 text-base font-bold text-slate-900 focus:outline-none focus:border-[#7A1900]"
                       />
                     </div>
 
                     {/* Quick Amount Chips */}
-                    <div className="flex flex-wrap gap-2 pt-1">
+                    <div className="flex flex-wrap gap-1.5 pt-1">
                       <button
                         type="button"
                         onClick={() => setCallInAmount(94.5)}
-                        className={`text-xs px-2.5 py-1 rounded-lg font-bold border transition-colors ${
+                        className={`text-xs px-2.5 py-1 rounded font-bold border transition-colors ${
                           callInAmount === 94.5
-                            ? "bg-[#7A1900] text-white border-red-700"
-                            : "bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-750"
+                            ? "bg-[#7A1900] text-white border-[#7A1900]"
+                            : "bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200"
                         }`}
                       >
                         $94.50 Quarterly Base
@@ -1282,10 +1184,10 @@ export default function AdminPortalPage() {
                       <button
                         type="button"
                         onClick={() => setCallInAmount(126.93)}
-                        className={`text-xs px-2.5 py-1 rounded-lg font-bold border transition-colors ${
+                        className={`text-xs px-2.5 py-1 rounded font-bold border transition-colors ${
                           callInAmount === 126.93
-                            ? "bg-[#7A1900] text-white border-red-700"
-                            : "bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-750"
+                            ? "bg-[#7A1900] text-white border-[#7A1900]"
+                            : "bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200"
                         }`}
                       >
                         $126.93 With Extra Can
@@ -1293,10 +1195,10 @@ export default function AdminPortalPage() {
                       <button
                         type="button"
                         onClick={() => setCallInAmount(45.0)}
-                        className={`text-xs px-2.5 py-1 rounded-lg font-bold border transition-colors ${
+                        className={`text-xs px-2.5 py-1 rounded font-bold border transition-colors ${
                           callInAmount === 45.0
-                            ? "bg-[#7A1900] text-white border-red-700"
-                            : "bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-750"
+                            ? "bg-[#7A1900] text-white border-[#7A1900]"
+                            : "bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200"
                         }`}
                       >
                         $45.00 Bulky Item
@@ -1304,15 +1206,15 @@ export default function AdminPortalPage() {
                     </div>
                   </div>
 
-                  {/* Service / Memo */}
+                  {/* Service Memo */}
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
                       Service Description / Memo
                     </label>
                     <select
                       value={callInService}
                       onChange={(e) => setCallInService(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+                      className="w-full bg-white border border-slate-300 rounded-lg px-3.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#7A1900]"
                     >
                       <option value="Past-Due Recovery - Card Expired">Past-Due Recovery - Card Expired</option>
                       <option value="Quarterly Trash & Organics (Route 4)">Quarterly Trash & Organics (Route 4)</option>
@@ -1321,11 +1223,11 @@ export default function AdminPortalPage() {
                     </select>
                   </div>
 
-                  {/* Primary Dispatch Button */}
+                  {/* Primary Submit */}
                   <button
                     type="submit"
                     disabled={isDispatchingInstant}
-                    className="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3.5 px-5 rounded-2xl font-black text-sm shadow-xl flex items-center justify-center gap-2 transition-all active:scale-98 disabled:opacity-50 mt-4"
+                    className="w-full bg-[#7A1900] hover:bg-[#5f1300] text-white py-3 px-4 rounded-lg font-bold text-sm shadow-xs flex items-center justify-center gap-2 transition-colors disabled:opacity-50 mt-4"
                   >
                     {isDispatchingInstant ? (
                       <>
@@ -1335,7 +1237,7 @@ export default function AdminPortalPage() {
                     ) : (
                       <>
                         <Send className="w-4 h-4" />
-                        <span>💬 Dispatch Instant Payment Link via Text</span>
+                        <span>💬 Dispatch Payment Text to Resident</span>
                       </>
                     )}
                   </button>
@@ -1343,135 +1245,118 @@ export default function AdminPortalPage() {
               </div>
             </div>
 
-            {/* Right Column: Live Transaction Feed & Confirmation */}
+            {/* Live Transaction Status Column */}
             <div className="lg:col-span-6 space-y-6">
               {!instantSentResult ? (
-                /* Empty state prompt */
-                <div className="bg-slate-900 border border-dashed border-slate-800 rounded-3xl p-8 text-center space-y-4 h-full flex flex-col items-center justify-center min-h-[400px]">
-                  <div className="w-14 h-14 rounded-2xl bg-slate-800 text-slate-400 flex items-center justify-center mx-auto">
-                    <Smartphone className="w-7 h-7" />
+                <div className="bg-white border-2 border-dashed border-slate-300 rounded-xl p-8 text-center space-y-3 h-full flex flex-col items-center justify-center min-h-[380px]">
+                  <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center mx-auto">
+                    <Smartphone className="w-6 h-6" />
                   </div>
-                  <div className="max-w-sm space-y-1">
-                    <h3 className="font-bold text-white text-base">Ready to Dispatch</h3>
-                    <p className="text-xs text-slate-400 leading-relaxed">
-                      Fill in the customer details on the left and tap Dispatch. The live transaction card will appear here and sync in real time as the resident pays on their mobile device.
-                    </p>
-                  </div>
+                  <h3 className="font-bold text-slate-900 text-base">Ready to Dispatch</h3>
+                  <p className="text-xs text-slate-500 max-w-sm">
+                    Enter the caller's information on the left and tap Dispatch. The payment status card will appear here and update live when authorized.
+                  </p>
                   <button
                     onClick={() => {
                       const fakeEvent = { preventDefault: () => {} } as React.FormEvent;
                       handleDispatchCallIn(fakeEvent);
                     }}
-                    className="text-xs text-emerald-400 hover:text-emerald-300 font-bold underline"
+                    className="text-xs text-[#7A1900] hover:underline font-bold"
                   >
                     ⚡ Test Dispatch Sample Link
                   </button>
                 </div>
               ) : (
-                /* Live Transaction Card */
-                <div className="bg-slate-900 border-2 border-slate-800 rounded-3xl p-6 shadow-2xl space-y-5 animate-fade-in relative overflow-hidden">
-                  {/* Status Banner */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs font-bold text-slate-400">
-                        {instantSentResult.accountNumber}
-                      </span>
-                      <span className="text-slate-600">•</span>
-                      <span className="text-xs text-slate-400">
-                        Sent at {instantSentResult.dispatchedAt}
-                      </span>
+                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs space-y-5 animate-fade-in">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <div className="font-mono text-xs font-bold text-slate-700">
+                      Account #{instantSentResult.accountNumber} • Dispatched at {instantSentResult.dispatchedAt}
                     </div>
-
                     {instantSentResult.simulated && (
-                      <span className="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-mono">
-                        Simulated SMS Carrier
+                      <span className="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-mono border border-slate-200">
+                        Twilio Simulator
                       </span>
                     )}
                   </div>
 
-                  {/* Dynamic Status Chip */}
+                  {/* Status Banner */}
                   <div
-                    className={`p-4 rounded-2xl border transition-all ${
+                    className={`p-4 rounded-lg border ${
                       isCallInPaid
-                        ? "bg-emerald-950/50 border-emerald-500 text-emerald-300"
-                        : "bg-amber-950/40 border-amber-600/50 text-amber-300"
+                        ? "bg-emerald-50 border-emerald-300 text-emerald-900"
+                        : "bg-amber-50 border-amber-300 text-amber-900"
                     }`}
                   >
                     {isCallInPaid ? (
                       <div className="flex items-start gap-3">
-                        <div className="w-8 h-8 rounded-full bg-emerald-500 text-black flex items-center justify-center font-bold text-base shrink-0 shadow-lg">
+                        <div className="w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-sm shrink-0">
                           ✓
                         </div>
-                        <div className="space-y-0.5">
-                          <div className="font-black text-white text-base flex items-center gap-1.5">
-                            <span>✓ PAID — ${instantSentResult.amount.toFixed(2)}</span>
-                            <span className="text-xs font-normal text-emerald-400">via Apple Pay</span>
+                        <div>
+                          <div className="font-bold text-emerald-900 text-sm">
+                            ✓ PAID — ${instantSentResult.amount.toFixed(2)} (Apple Pay)
                           </div>
-                          <p className="text-xs text-emerald-200/90">
-                            Payment verified via live webhook/poll. Ready to post directly into Navusoft batch cash receipts.
+                          <p className="text-xs text-emerald-700 mt-0.5">
+                            Payment verified and settled. Ready for batch cash posting to Navusoft.
                           </p>
                         </div>
                       </div>
                     ) : (
                       <div className="flex items-start gap-3">
-                        <div className="w-8 h-8 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500 flex items-center justify-center shrink-0">
-                          <RefreshCw className="w-4 h-4 animate-spin text-amber-400" />
+                        <div className="w-7 h-7 rounded-full bg-amber-100 text-amber-700 border border-amber-300 flex items-center justify-center shrink-0">
+                          <RefreshCw className="w-3.5 h-3.5 animate-spin text-amber-700" />
                         </div>
-                        <div className="space-y-0.5">
-                          <div className="font-bold text-amber-200 text-sm flex items-center gap-2">
-                            <span>⏳ Awaiting Customer Payment...</span>
-                            <span className="relative flex h-2 w-2">
-                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                              <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
-                            </span>
+                        <div>
+                          <div className="font-bold text-amber-900 text-sm">
+                            ⏳ Waiting for Resident to Pay...
                           </div>
-                          <p className="text-xs text-amber-300/80">
-                            Live sync active. When resident authorizes Apple Pay or enters card on their phone, this badge will automatically flip to green.
+                          <p className="text-xs text-amber-800 mt-0.5">
+                            Live sync active. When the resident opens the link on their phone and authorizes payment, this box will turn green automatically.
                           </p>
                         </div>
                       </div>
                     )}
                   </div>
 
-                  {/* Resident SMS Message Preview Box */}
-                  <div className="space-y-2">
-                    <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
-                      Resident Message Preview
+                  {/* SMS Preview */}
+                  <div className="space-y-1.5">
+                    <span className="text-xs font-bold uppercase tracking-wider text-slate-600">
+                      Text Message Sent to Resident
                     </span>
-                    <div className="bg-slate-950 border border-slate-800 rounded-2xl p-4 text-xs text-slate-300 font-sans space-y-2 leading-relaxed">
-                      <div className="flex items-center gap-2 text-slate-400 text-[11px] pb-1 border-b border-slate-800">
-                        <Smartphone className="w-3.5 h-3.5 text-blue-400" />
+                    <div className="bg-slate-50 border border-slate-200 rounded-lg p-3.5 text-xs text-slate-700 space-y-1.5 leading-relaxed">
+                      <div className="text-[11px] text-slate-500 font-semibold border-b border-slate-200 pb-1 flex items-center gap-1.5">
+                        <Smartphone className="w-3.5 h-3.5 text-slate-600" />
                         <span>Delivered to {instantSentResult.recipient}</span>
                       </div>
-                      <p className="text-slate-200">{instantSentResult.messageBody}</p>
+                      <p className="text-slate-800">{instantSentResult.messageBody}</p>
                     </div>
                   </div>
 
-                  {/* Payment Link & Fallback Copy */}
-                  <div className="space-y-2">
-                    <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
-                      Universal 1-Tap Payment Link
+                  {/* Link & Copy */}
+                  <div className="space-y-1.5">
+                    <span className="text-xs font-bold uppercase tracking-wider text-slate-600">
+                      Payment Link
                     </span>
                     <div className="flex items-center gap-2">
                       <input
                         type="text"
                         readOnly
                         value={instantSentResult.paymentUrl}
-                        className="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 font-mono w-full truncate"
+                        className="bg-slate-50 border border-slate-300 rounded px-3 py-1.5 text-xs text-slate-800 font-mono w-full truncate"
                       />
                       <button
                         onClick={() => copyToClipboard(instantSentResult.paymentUrl, "instant-link")}
-                        className="bg-slate-800 hover:bg-slate-700 text-white px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors shrink-0"
+                        className="bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 px-3 py-1.5 rounded text-xs font-bold flex items-center gap-1 transition-colors shrink-0"
                       >
                         {copiedId === "instant-link" ? (
                           <>
-                            <Check className="w-3.5 h-3.5 text-emerald-400" />
-                            <span>Copied!</span>
+                            <Check className="w-3.5 h-3.5 text-emerald-600" />
+                            <span>Copied</span>
                           </>
                         ) : (
                           <>
                             <Copy className="w-3.5 h-3.5" />
-                            <span>Copy Link</span>
+                            <span>Copy</span>
                           </>
                         )}
                       </button>
@@ -1480,7 +1365,7 @@ export default function AdminPortalPage() {
                         href={instantSentResult.paymentUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="bg-slate-800 hover:bg-slate-700 text-white p-2 rounded-xl text-xs transition-colors shrink-0"
+                        className="bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 p-1.5 rounded text-xs transition-colors shrink-0"
                         title="Open resident pay view"
                       >
                         <ExternalLink className="w-4 h-4" />
@@ -1488,10 +1373,10 @@ export default function AdminPortalPage() {
                     </div>
                   </div>
 
-                  {/* Manual Test Flip Button */}
+                  {/* Test Payment Button */}
                   {!isCallInPaid && (
-                    <div className="pt-2 border-t border-slate-800 flex items-center justify-between">
-                      <span className="text-xs text-slate-400">Testing without a phone?</span>
+                    <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+                      <span className="text-slate-500">Testing without a phone?</span>
                       <button
                         onClick={() =>
                           handleSimulatePayment(
@@ -1500,10 +1385,9 @@ export default function AdminPortalPage() {
                             instantSentResult.amount
                           )
                         }
-                        className="bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-800 px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5"
+                        className="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 px-3 py-1.5 rounded text-xs font-bold transition-colors"
                       >
-                        <Zap className="w-3.5 h-3.5 text-amber-400" />
-                        <span>Simulate Customer Payment Now</span>
+                        ⚡ Simulate Customer Payment Now
                       </button>
                     </div>
                   )}
@@ -1514,17 +1398,17 @@ export default function AdminPortalPage() {
         )}
       </main>
 
-      {/* Operations Footer */}
-      <footer className="bg-slate-900 border-t border-slate-800 py-4 px-4 sm:px-6 text-center text-xs text-slate-500">
+      {/* Traditional Corporate Footer */}
+      <footer className="bg-white border-t border-slate-200 py-4 px-4 sm:px-8 text-center text-xs text-slate-500">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
           <span>
-            © {new Date().getFullYear()} Suburban Waste Services • Front-Office Operations Management Console
+            © {new Date().getFullYear()} Suburban Waste Services • Front-Office Billing & Cash Posting System
           </span>
           <div className="flex items-center gap-4">
-            <span className="text-slate-400">Connected to Navusoft Batch Interface</span>
+            <span>Navusoft ERP Integration Ready</span>
             <span>•</span>
-            <Link href="/" className="hover:text-slate-300 underline">
-              Resident Account View
+            <Link href="/" className="text-[#7A1900] hover:underline font-semibold">
+              Return to Resident Account View
             </Link>
           </div>
         </div>
