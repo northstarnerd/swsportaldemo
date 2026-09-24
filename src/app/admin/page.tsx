@@ -11,19 +11,12 @@ import {
   Clock,
   Copy,
   ExternalLink,
-  RotateCcw,
-  Sparkles,
-  ArrowRight,
   ShieldCheck,
   Phone,
-  User,
-  DollarSign,
-  TrendingUp,
   FileSpreadsheet,
   Check,
   RefreshCw,
   Search,
-  Zap,
 } from "lucide-react";
 import confetti from "canvas-confetti";
 
@@ -39,10 +32,9 @@ export interface RecoveryAccount {
   authCode?: string;
   paidAt?: string;
   paymentUrl?: string;
-  isDemoTarget?: boolean;
 }
 
-const DEFAULT_SAMPLE_ACCOUNTS: RecoveryAccount[] = [
+const INITIAL_ACCOUNTS: RecoveryAccount[] = [
   {
     accountNumber: "SWS-89545",
     customerName: "Patrick Badley",
@@ -51,7 +43,6 @@ const DEFAULT_SAMPLE_ACCOUNTS: RecoveryAccount[] = [
     service: "Quarterly Trash & Organics",
     address: "6484 Promontory Drive, Eden Prairie, MN",
     smsStatus: "Draft",
-    isDemoTarget: true,
   },
   {
     accountNumber: "SWS-74120",
@@ -93,13 +84,11 @@ const DEFAULT_SAMPLE_ACCOUNTS: RecoveryAccount[] = [
 
 export default function AdminPortalPage() {
   const [activeTab, setActiveTab] = useState<"batch" | "instant">("batch");
-  const [accounts, setAccounts] = useState<RecoveryAccount[]>(DEFAULT_SAMPLE_ACCOUNTS);
+  const [accounts, setAccounts] = useState<RecoveryAccount[]>(INITIAL_ACCOUNTS);
   const [searchQuery, setSearchQuery] = useState("");
   const [isBatchSending, setIsBatchSending] = useState(false);
   const [batchProgress, setBatchProgress] = useState<{ sent: number; total: number } | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [myCellPhone, setMyCellPhone] = useState("(614) 562-0309");
-  const [isEditingCell, setIsEditingCell] = useState(false);
 
   // Call-In Instant Dispatch State
   const [callInPhone, setCallInPhone] = useState("(614) 562-0309");
@@ -124,35 +113,7 @@ export default function AdminPortalPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [uploadNotice, setUploadNotice] = useState<string | null>(null);
-
-  // Sync / Polling State
-  const [lastSyncTime, setLastSyncTime] = useState<Date>(new Date());
   const [knownPaidAccounts, setKnownPaidAccounts] = useState<Set<string>>(new Set());
-
-  // Load saved cell from localStorage if available
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("sws_demo_cell");
-      if (saved) {
-        setMyCellPhone(saved);
-        setCallInPhone(saved);
-        setAccounts((prev) =>
-          prev.map((acc) => (acc.isDemoTarget ? { ...acc, phoneNumber: saved } : acc))
-        );
-      }
-    }
-  }, []);
-
-  const handleSaveMyCell = (newNumber: string) => {
-    setMyCellPhone(newNumber);
-    if (typeof window !== "undefined") {
-      localStorage.setItem("sws_demo_cell", newNumber);
-    }
-    setAccounts((prev) =>
-      prev.map((acc) => (acc.isDemoTarget ? { ...acc, phoneNumber: newNumber } : acc))
-    );
-    setIsEditingCell(false);
-  };
 
   // Live Polling for Payment Status Sync
   useEffect(() => {
@@ -162,8 +123,6 @@ export default function AdminPortalPage() {
         if (!res.ok) return;
         const data = await res.json();
         if (data.success && Array.isArray(data.payments)) {
-          setLastSyncTime(new Date());
-
           let newPaymentFound = false;
 
           setAccounts((prevAccounts) =>
@@ -239,7 +198,7 @@ export default function AdminPortalPage() {
     try {
       const lines = csvContent.split(/\r?\n/).filter((l) => l.trim().length > 0);
       if (lines.length < 2) {
-        setUploadNotice("CSV is empty or missing data rows.");
+        setUploadNotice("CSV file contains no data rows.");
         return;
       }
 
@@ -249,12 +208,12 @@ export default function AdminPortalPage() {
         if (parts.length >= 4) {
           const [accNum, name, phone, amtStr, srv, addr] = parts;
           const parsedAmt = parseFloat(amtStr.replace(/[^0-9.]/g, "")) || 94.5;
-          const isPatrickOrDemo = Boolean(
+          const isPatrick = Boolean(
             i === 1 ||
               (name && name.toLowerCase().includes("patrick")) ||
               (accNum && accNum.includes("89545"))
           );
-          const finalPhone = isPatrickOrDemo
+          const finalPhone = isPatrick
             ? (phone && phone.replace(/\D/g, "").length >= 10 ? phone : "(614) 562-0309")
             : (phone || "(612) 555-0100");
 
@@ -266,14 +225,13 @@ export default function AdminPortalPage() {
             service: srv || "Quarterly Trash & Organics",
             address: addr || "Eden Prairie, MN (Route 4)",
             smsStatus: "Draft",
-            isDemoTarget: isPatrickOrDemo,
           });
         }
       }
 
       if (parsed.length > 0) {
         setAccounts(parsed);
-        setUploadNotice(`✓ Successfully loaded ${parsed.length} accounts from CSV.`);
+        setUploadNotice(`Imported ${parsed.length} accounts from file.`);
       } else {
         setUploadNotice("Could not parse valid accounts from file.");
       }
@@ -390,47 +348,6 @@ export default function AdminPortalPage() {
     }
   };
 
-  // Simulate Payment
-  const handleSimulatePayment = async (accNum: string, name: string, amt: number) => {
-    try {
-      const code = `SWS-${Math.floor(100000 + Math.random() * 900000)}`;
-      await fetch("/api/admin/payments/status", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          accountNumber: accNum,
-          customerName: name,
-          amount: amt,
-          paymentMethod: "Apple Pay (1-Tap)",
-          confirmationCode: code,
-        }),
-      });
-
-      setAccounts((prev) =>
-        prev.map((a) =>
-          a.accountNumber === accNum
-            ? {
-                ...a,
-                smsStatus: "Paid",
-                paymentMethod: "Apple Pay (1-Tap)",
-                authCode: code,
-                paidAt: new Date().toISOString(),
-              }
-            : a
-        )
-      );
-
-      confetti({
-        particleCount: 60,
-        spread: 60,
-        origin: { y: 0.6 },
-        colors: ["#10B981", "#7A1900", "#2563EB"],
-      });
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
   // Download Navusoft Cash Posting CSV
   const handleDownloadNavusoftCsv = () => {
     const rowsToExport = accounts.filter((a) => a.smsStatus === "Paid");
@@ -480,29 +397,6 @@ export default function AdminPortalPage() {
     document.body.removeChild(link);
   };
 
-  // Reset State
-  const handleResetDemo = async () => {
-    await fetch("/api/admin/payments/status", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "reset" }),
-    }).catch(() => {});
-
-    setAccounts(
-      DEFAULT_SAMPLE_ACCOUNTS.map((a) => ({
-        ...a,
-        phoneNumber: a.isDemoTarget && myCellPhone ? myCellPhone : a.phoneNumber,
-        smsStatus: "Draft",
-        paymentMethod: undefined,
-        authCode: undefined,
-        paidAt: undefined,
-        paymentUrl: undefined,
-      }))
-    );
-    setInstantSentResult(null);
-    setKnownPaidAccounts(new Set());
-  };
-
   const copyToClipboard = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
     setCopiedId(id);
@@ -527,7 +421,7 @@ export default function AdminPortalPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex flex-col">
-      {/* 1. Traditional Corporate SWS Top Utility Header */}
+      {/* Traditional Corporate Header */}
       <header className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
         <div className="bg-[#7A1900] text-white text-xs py-2 px-4 sm:px-8">
           <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -542,19 +436,19 @@ export default function AdminPortalPage() {
         </div>
 
         {/* Main Header Row */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3.5 flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3.5">
             <img
               src="/sws-logo.png"
               alt="Suburban Waste Services"
-              className="h-9 w-auto object-contain"
+              className="h-10 w-auto object-contain"
             />
             <div className="border-l border-slate-200 pl-3.5">
-              <h1 className="font-black text-lg text-slate-900 leading-tight">
+              <h1 className="font-black text-xl text-slate-900 leading-tight">
                 Front-Office Staff Portal
               </h1>
               <p className="text-xs text-slate-500 font-medium">
-                Delinquent Account Recovery & 1-Tap Payment Link Dispatch
+                Delinquent Account Recovery & Mobile Payment Link Dispatch
               </p>
             </div>
           </div>
@@ -565,7 +459,7 @@ export default function AdminPortalPage() {
           </div>
         </div>
 
-        {/* Traditional Corporate Tab Bar */}
+        {/* Traditional Navigation Tabs */}
         <div className="max-w-7xl mx-auto px-4 sm:px-8 border-t border-slate-200 flex justify-between items-center">
           <nav className="flex space-x-2 -mb-px text-sm font-bold">
             <button
@@ -577,7 +471,7 @@ export default function AdminPortalPage() {
               }`}
             >
               <FileSpreadsheet className="w-4 h-4" />
-              <span>1. Past-Due SMS Recovery Batch</span>
+              <span>Past-Due SMS Recovery Batch</span>
               <span className="text-xs bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full font-bold">
                 {accounts.length}
               </span>
@@ -592,16 +486,13 @@ export default function AdminPortalPage() {
               }`}
             >
               <Phone className="w-4 h-4" />
-              <span>2. Front-Desk Phone Call Tool</span>
-              <span className="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">
-                Instant Link
-              </span>
+              <span>Front-Desk Call-In Tool</span>
             </button>
           </nav>
 
           <div className="hidden lg:flex items-center gap-1.5 text-xs text-slate-500 font-medium">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>PCI-DSS Level 1 Compliant • No Card Data Stored on SWS Servers</span>
+            <span>PCI-DSS Level 1 Compliant • Direct Carrier SMS</span>
           </div>
         </div>
       </header>
@@ -610,7 +501,7 @@ export default function AdminPortalPage() {
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-8 py-6 space-y-6">
         {/* VIEW 1: TAB 1 — PAST-DUE SMS RECOVERY BATCH */}
         {activeTab === "batch" && (
-          <div className="space-y-6 animate-fade-in">
+          <div className="space-y-6">
             {/* Top Metric Cards */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
@@ -661,54 +552,37 @@ export default function AdminPortalPage() {
               </div>
             </div>
 
-            {/* Batch File Management & Demo Loader Box */}
+            {/* Batch File Management Box */}
             <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-4">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                   <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
                     <FileSpreadsheet className="w-5 h-5 text-[#7A1900]" />
-                    <span>Quarterly Delinquent Account File Ingestion</span>
+                    <span>Delinquent Account File Ingestion</span>
                   </h2>
                   <p className="text-xs text-slate-600 mt-0.5">
-                    Import delinquent accounts from Navusoft, or use our verified 5-account sample batch.
+                    Upload your delinquent aging file from Navusoft to generate and dispatch payment links.
                   </p>
                 </div>
 
-                {/* Primary Actions */}
+                {/* File Action Buttons */}
                 <div className="flex flex-wrap items-center gap-2">
-                  <button
-                    onClick={() => {
-                      setAccounts(
-                        DEFAULT_SAMPLE_ACCOUNTS.map((a) => ({
-                          ...a,
-                          phoneNumber: a.isDemoTarget && myCellPhone ? myCellPhone : a.phoneNumber,
-                          smsStatus: "Draft",
-                        }))
-                      );
-                      setUploadNotice("⚡ Loaded 5 Eden Prairie delinquent accounts for Route 4.");
-                    }}
-                    className="bg-[#7A1900] hover:bg-[#5f1300] text-white px-4 py-2 rounded-lg font-bold text-xs sm:text-sm shadow-xs flex items-center gap-1.5 transition-colors"
-                  >
-                    <Zap className="w-4 h-4 text-amber-300" />
-                    <span>⚡ Load SWS Sample Batch (5 Accounts)</span>
-                  </button>
-
                   <a
                     href="/sws_sample_delinquent_batch.csv"
-                    download="sws_sample_delinquent_batch.csv"
-                    className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 px-3 py-2 rounded-lg font-bold text-xs flex items-center gap-1.5 transition-colors"
-                    title="Download demo CSV file to your desktop"
+                    download="sws_delinquent_batch_template.csv"
+                    className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 px-3.5 py-2 rounded-lg font-bold text-xs flex items-center gap-1.5 transition-colors"
+                    title="Download delinquent CSV file template"
                   >
                     <Download className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Download Demo CSV</span>
+                    <span>Download CSV Template</span>
                   </a>
 
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 px-3 py-2 rounded-lg font-bold text-xs flex items-center gap-1.5 transition-colors"
+                    className="bg-[#7A1900] hover:bg-[#5f1300] text-white px-4 py-2 rounded-lg font-bold text-xs flex items-center gap-1.5 transition-colors shadow-xs"
                   >
-                    <Upload className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Import Custom CSV</span>
+                    <Upload className="w-3.5 h-3.5 text-white" />
+                    <span>Upload Delinquent Aging File</span>
                   </button>
                   <input
                     ref={fileInputRef}
@@ -747,52 +621,10 @@ export default function AdminPortalPage() {
                 }`}
               >
                 <span>
-                  Drop Navusoft delinquent CSV file here (e.g.{" "}
-                  <strong className="font-mono text-slate-800">sws_sample_delinquent_batch.csv</strong>) or click
-                  Import Custom CSV above.
+                  Drag and drop your Navusoft CSV file here, or click <strong>Upload Delinquent Aging File</strong> above.
                 </span>
                 {uploadNotice && (
                   <p className="text-xs font-bold text-emerald-700 mt-1">{uploadNotice}</p>
-                )}
-              </div>
-
-              {/* Demo Cell Phone Notice */}
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 flex flex-wrap items-center justify-between gap-2 text-xs text-amber-900">
-                <div className="flex items-center gap-2">
-                  <Smartphone className="w-4 h-4 text-amber-700 shrink-0" />
-                  <span>
-                    <strong>Live Demo Mobile Phone:</strong> Account <strong>SWS-89545</strong> (Patrick Badley) will send texts to{" "}
-                    <strong className="font-mono bg-amber-100 px-2 py-0.5 rounded text-amber-900">
-                      {accounts.find((a) => a.isDemoTarget)?.phoneNumber || "(614) 562-0309"}
-                    </strong>
-                  </span>
-                </div>
-
-                {!isEditingCell ? (
-                  <button
-                    onClick={() => setIsEditingCell(true)}
-                    className="text-amber-800 hover:text-amber-900 font-bold underline text-xs"
-                  >
-                    Change Phone Number
-                  </button>
-                ) : (
-                  <div className="flex items-center gap-1.5">
-                    <input
-                      type="text"
-                      defaultValue={accounts.find((a) => a.isDemoTarget)?.phoneNumber || "(614) 562-0309"}
-                      id="demo-cell-edit-input"
-                      className="bg-white border border-amber-400 rounded px-2 py-0.5 text-xs text-slate-900 font-mono focus:outline-none w-36"
-                    />
-                    <button
-                      onClick={() => {
-                        const input = document.getElementById("demo-cell-edit-input") as HTMLInputElement;
-                        if (input) handleSaveMyCell(input.value);
-                      }}
-                      className="bg-amber-800 hover:bg-amber-700 text-white font-bold px-2 py-0.5 rounded text-xs"
-                    >
-                      Save
-                    </button>
-                  </div>
                 )}
               </div>
             </div>
@@ -818,7 +650,7 @@ export default function AdminPortalPage() {
                       <>
                         <Send className="w-4 h-4" />
                         <span>
-                          🚀 Send Text Alerts to All ({accounts.filter((a) => a.smsStatus === "Draft").length}) Accounts
+                          Send SMS Alerts to All ({accounts.filter((a) => a.smsStatus === "Draft").length}) Accounts
                         </span>
                       </>
                     )}
@@ -830,7 +662,7 @@ export default function AdminPortalPage() {
                     title="Export settled payments to Navusoft cash posting format"
                   >
                     <Download className="w-4 h-4" />
-                    <span>📥 Export to Navusoft Cash Receipts (.csv)</span>
+                    <span>Export to Navusoft Cash Receipts (.csv)</span>
                     {paidAccounts.length > 0 && (
                       <span className="bg-white text-emerald-800 text-xs px-2 py-0.5 rounded-full font-bold ml-1">
                         {paidAccounts.length} Paid
@@ -883,14 +715,7 @@ export default function AdminPortalPage() {
                       >
                         {/* Account # */}
                         <td className="py-3 px-4 font-mono font-bold text-slate-900 whitespace-nowrap">
-                          <div className="flex items-center gap-1.5">
-                            <span>{acc.accountNumber}</span>
-                            {acc.isDemoTarget && (
-                              <span className="bg-amber-100 text-amber-800 border border-amber-300 text-[10px] font-black px-1.5 py-0.5 rounded">
-                                DEMO TARGET
-                              </span>
-                            )}
-                          </div>
+                          <div>{acc.accountNumber}</div>
                           <div className="text-[11px] text-slate-500 font-sans font-normal">
                             Route 4 (Eden Prairie)
                           </div>
@@ -1011,16 +836,6 @@ export default function AdminPortalPage() {
                             >
                               <ExternalLink className="w-3.5 h-3.5" />
                             </a>
-
-                            {acc.smsStatus !== "Paid" && (
-                              <button
-                                onClick={() => handleSimulatePayment(acc.accountNumber, acc.customerName, acc.amountDue)}
-                                className="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-1 rounded text-xs font-bold transition-all"
-                                title="Test authorization simulation"
-                              >
-                                ⚡ Simulate Pay
-                              </button>
-                            )}
                           </div>
                         </td>
                       </tr>
@@ -1034,25 +849,25 @@ export default function AdminPortalPage() {
 
         {/* VIEW 2: TAB 2 — FRONT-DESK PHONE CALL TOOL */}
         {activeTab === "instant" && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-fade-in">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Form Column */}
             <div className="lg:col-span-6 space-y-6">
               <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs space-y-5">
                 <div>
                   <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-red-100 text-[#7A1900] text-xs font-bold mb-2">
                     <Phone className="w-3.5 h-3.5" />
-                    <span>Inbound Resident Call Tool</span>
+                    <span>Inbound Call Tool</span>
                   </div>
                   <h2 className="text-xl font-black text-slate-900">
-                    Send Instant Payment Link to Resident
+                    Dispatch Payment Link to Resident
                   </h2>
                   <p className="text-xs text-slate-600 mt-1">
-                    When a customer calls in with an expired card or question, text them a secure 1-tap Apple Pay / Google Pay link while they are on the phone.
+                    Send an instant 1-tap mobile payment link to a caller while keeping them on the line.
                   </p>
                 </div>
 
                 <form onSubmit={handleDispatchCallIn} className="space-y-4">
-                  {/* Phone Input with Presets */}
+                  {/* Phone Input */}
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
                       Customer Mobile Phone Number
@@ -1065,34 +880,6 @@ export default function AdminPortalPage() {
                       onChange={(e) => setCallInPhone(e.target.value)}
                       className="w-full bg-white border border-slate-300 rounded-lg px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 font-mono focus:outline-none focus:border-[#7A1900]"
                     />
-
-                    {/* Quick Fill Presets */}
-                    <div className="flex flex-wrap gap-1.5 pt-1">
-                      <button
-                        type="button"
-                        onClick={() => setCallInPhone("(614) 562-0309")}
-                        className="bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 px-2.5 py-1 rounded text-xs font-bold transition-colors flex items-center gap-1"
-                      >
-                        <Smartphone className="w-3 h-3 text-amber-700" />
-                        <span>📱 Fill Patrick's Cell (614-562-0309)</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setCallInPhone("(952) 937-8900")}
-                        className="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 px-2.5 py-1 rounded text-xs font-semibold transition-colors"
-                      >
-                        🏢 SWS Office (952-937-8900)
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setCallInPhone("(612) 555-0144")}
-                        className="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 px-2.5 py-1 rounded text-xs font-semibold transition-colors"
-                      >
-                        🧑 Robert Miller (612-555-0144)
-                      </button>
-                    </div>
                   </div>
 
                   {/* Customer Name & Account */}
@@ -1148,7 +935,7 @@ export default function AdminPortalPage() {
                       />
                     </div>
 
-                    {/* Quick Amount Chips */}
+                    {/* Standard Service Amount Chips */}
                     <div className="flex flex-wrap gap-1.5 pt-1">
                       <button
                         type="button"
@@ -1217,7 +1004,7 @@ export default function AdminPortalPage() {
                     ) : (
                       <>
                         <Send className="w-4 h-4" />
-                        <span>💬 Dispatch Payment Text to Resident</span>
+                        <span>Send Payment Link via SMS</span>
                       </>
                     )}
                   </button>
@@ -1234,29 +1021,15 @@ export default function AdminPortalPage() {
                   </div>
                   <h3 className="font-bold text-slate-900 text-base">Ready to Dispatch</h3>
                   <p className="text-xs text-slate-500 max-w-sm">
-                    Enter the caller's information on the left and tap Dispatch. The payment status card will appear here and update live when authorized.
+                    Enter the caller's information on the left and click Send Payment Link. The live status ledger will update here in real time.
                   </p>
-                  <button
-                    onClick={() => {
-                      const fakeEvent = { preventDefault: () => {} } as React.FormEvent;
-                      handleDispatchCallIn(fakeEvent);
-                    }}
-                    className="text-xs text-[#7A1900] hover:underline font-bold"
-                  >
-                    ⚡ Test Dispatch Sample Link
-                  </button>
                 </div>
               ) : (
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs space-y-5 animate-fade-in">
+                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs space-y-5">
                   <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                     <div className="font-mono text-xs font-bold text-slate-700">
                       Account #{instantSentResult.accountNumber} • Dispatched at {instantSentResult.dispatchedAt}
                     </div>
-                    {instantSentResult.simulated && (
-                      <span className="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-mono border border-slate-200">
-                        Twilio Simulator
-                      </span>
-                    )}
                   </div>
 
                   {/* Status Banner */}
@@ -1288,10 +1061,10 @@ export default function AdminPortalPage() {
                         </div>
                         <div>
                           <div className="font-bold text-amber-900 text-sm">
-                            ⏳ Waiting for Resident to Pay...
+                            Waiting for Resident Payment...
                           </div>
                           <p className="text-xs text-amber-800 mt-0.5">
-                            Live sync active. When the resident opens the link on their phone and authorizes payment, this box will turn green automatically.
+                            Payment link delivered to resident. This record will automatically update upon bank authorization.
                           </p>
                         </div>
                       </div>
@@ -1352,25 +1125,6 @@ export default function AdminPortalPage() {
                       </a>
                     </div>
                   </div>
-
-                  {/* Test Payment Button */}
-                  {!isCallInPaid && (
-                    <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
-                      <span className="text-slate-500">Testing without a phone?</span>
-                      <button
-                        onClick={() =>
-                          handleSimulatePayment(
-                            instantSentResult.accountNumber,
-                            instantSentResult.customerName,
-                            instantSentResult.amount
-                          )
-                        }
-                        className="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 px-3 py-1.5 rounded text-xs font-bold transition-colors"
-                      >
-                        ⚡ Simulate Customer Payment Now
-                      </button>
-                    </div>
-                  )}
                 </div>
               )}
             </div>
