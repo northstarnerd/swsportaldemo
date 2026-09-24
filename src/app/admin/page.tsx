@@ -17,6 +17,7 @@ import {
   Check,
   RefreshCw,
   Search,
+  Info,
 } from "lucide-react";
 import confetti from "canvas-confetti";
 
@@ -193,47 +194,129 @@ export default function AdminPortalPage() {
   const recoveryRate =
     currentBatchTotal > 0 ? ((totalCollected / currentBatchTotal) * 100).toFixed(1) : "0.0";
 
+  // CSV Helper: parse line respecting quoted commas
+  const parseCsvLine = (line: string): string[] => {
+    const result: string[] = [];
+    let cur = "";
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
+      if (char === '"') {
+        if (inQuotes && line[i + 1] === '"') {
+          cur += '"';
+          i++;
+        } else {
+          inQuotes = !inQuotes;
+        }
+      } else if (char === "," && !inQuotes) {
+        result.push(cur.trim().replace(/^"|"$/g, ""));
+        cur = "";
+      } else {
+        cur += char;
+      }
+    }
+    result.push(cur.trim().replace(/^"|"$/g, ""));
+    return result;
+  };
+
   // CSV Ingestion Handler
   const handleCsvText = (csvContent: string) => {
     try {
-      const lines = csvContent.split(/\r?\n/).filter((l) => l.trim().length > 0);
-      if (lines.length < 2) {
+      const rawLines = csvContent.split(/\r?\n/).map((l) => l.trim()).filter((l) => l.length > 0);
+      if (rawLines.length < 2) {
         setUploadNotice("CSV file contains no data rows.");
         return;
       }
 
-      const parsed: RecoveryAccount[] = [];
-      for (let i = 1; i < lines.length; i++) {
-        const parts = lines[i].split(",").map((p) => p.trim().replace(/^"|"$/g, ""));
-        if (parts.length >= 4) {
-          const [accNum, name, phone, amtStr, srv, addr] = parts;
-          const parsedAmt = parseFloat(amtStr.replace(/[^0-9.]/g, "")) || 94.5;
-          const isPatrick = Boolean(
-            i === 1 ||
-              (name && name.toLowerCase().includes("patrick")) ||
-              (accNum && accNum.includes("89545"))
-          );
-          const finalPhone = isPatrick
-            ? (phone && phone.replace(/\D/g, "").length >= 10 ? phone : "(614) 562-0309")
-            : (phone || "(612) 555-0100");
+      // Check header row (line 0)
+      const headerTokens = parseCsvLine(rawLines[0]).map((h) =>
+        h.toLowerCase().replace(/[^a-z0-9]/g, "")
+      );
 
-          parsed.push({
-            accountNumber: accNum.startsWith("SWS-") ? accNum : `SWS-${accNum}`,
-            customerName: name || "Resident",
-            phoneNumber: finalPhone,
-            amountDue: parsedAmt,
-            service: srv || "Quarterly Trash & Organics",
-            address: addr || "Eden Prairie, MN (Route 4)",
-            smsStatus: "Draft",
-          });
+      // Determine column index mappings dynamically
+      let idxAccount = headerTokens.findIndex(
+        (h) => h.includes("account") || h.includes("acct") || h === "id"
+      );
+      let idxPhone = headerTokens.findIndex(
+        (h) => h.includes("phone") || h.includes("mobile") || h.includes("cell") || h.includes("sms")
+      );
+      let idxAmount = headerTokens.findIndex(
+        (h) => h.includes("amount") || h.includes("balance") || h.includes("due") || h.includes("total")
+      );
+      let idxName = headerTokens.findIndex(
+        (h) => h.includes("name") || h.includes("customer") || h.includes("resident")
+      );
+      let idxService = headerTokens.findIndex(
+        (h) => h.includes("service") || h.includes("plan") || h.includes("desc")
+      );
+      let idxAddress = headerTokens.findIndex(
+        (h) => h.includes("address") || h.includes("street") || h.includes("location")
+      );
+
+      // Fallback if header row was not found or contains raw data
+      const hasRecognizedHeader = idxAccount !== -1 || idxPhone !== -1 || idxAmount !== -1;
+      let startRow = 1;
+
+      if (!hasRecognizedHeader) {
+        const firstLineCols = parseCsvLine(rawLines[0]);
+        if (firstLineCols.length === 3) {
+          idxAccount = 0;
+          idxPhone = 1;
+          idxAmount = 2;
+        } else {
+          idxAccount = 0;
+          idxName = 1;
+          idxPhone = 2;
+          idxAmount = 3;
+          idxService = 4;
+          idxAddress = 5;
         }
+        startRow = 0;
+      } else {
+        if (idxAccount === -1) idxAccount = 0;
+        if (idxPhone === -1) idxPhone = idxName === 1 ? 2 : 1;
+        if (idxAmount === -1) idxAmount = idxPhone === 1 ? 2 : 3;
+      }
+
+      const parsed: RecoveryAccount[] = [];
+      for (let i = startRow; i < rawLines.length; i++) {
+        const parts = parseCsvLine(rawLines[i]);
+        if (parts.length < 2) continue;
+
+        const accNumRaw = idxAccount >= 0 && parts[idxAccount] ? parts[idxAccount] : `SWS-${10000 + i}`;
+        const phoneRaw = idxPhone >= 0 && parts[idxPhone] ? parts[idxPhone] : "";
+        const amtStr = idxAmount >= 0 && parts[idxAmount] ? parts[idxAmount] : "94.50";
+        const nameRaw = idxName >= 0 && parts[idxName] ? parts[idxName] : "";
+        const srvRaw = idxService >= 0 && parts[idxService] ? parts[idxService] : "";
+        const addrRaw = idxAddress >= 0 && parts[idxAddress] ? parts[idxAddress] : "";
+
+        const parsedAmt = parseFloat(amtStr.replace(/[^0-9.]/g, "")) || 94.5;
+        const isPatrick = Boolean(
+          (nameRaw && nameRaw.toLowerCase().includes("patrick")) ||
+          (accNumRaw && accNumRaw.includes("89545"))
+        );
+        const finalPhone = isPatrick
+          ? (phoneRaw && phoneRaw.replace(/\D/g, "").length >= 10 ? phoneRaw : "(614) 562-0309")
+          : (phoneRaw || "(612) 555-0100");
+
+        const cleanAccNum = accNumRaw.startsWith("SWS-") ? accNumRaw : `SWS-${accNumRaw}`;
+
+        parsed.push({
+          accountNumber: cleanAccNum,
+          customerName: nameRaw || "Resident",
+          phoneNumber: finalPhone,
+          amountDue: parsedAmt,
+          service: srvRaw || "Quarterly Trash & Organics",
+          address: addrRaw || "Eden Prairie, MN",
+          smsStatus: "Draft",
+        });
       }
 
       if (parsed.length > 0) {
         setAccounts(parsed);
-        setUploadNotice(`Imported ${parsed.length} accounts from file.`);
+        setUploadNotice(`Imported ${parsed.length} accounts. Ready for SMS delivery.`);
       } else {
-        setUploadNotice("Could not parse valid accounts from file.");
+        setUploadNotice("Could not parse valid accounts from file. Ensure AccountNumber, PhoneNumber, and AmountDue are present.");
       }
     } catch (e: any) {
       setUploadNotice("Error reading CSV: " + (e.message || "Unknown error"));
@@ -568,21 +651,31 @@ export default function AdminPortalPage() {
                 {/* File Action Buttons */}
                 <div className="flex flex-wrap items-center gap-2">
                   <a
-                    href="/sws_sample_delinquent_batch.csv"
-                    download="sws_delinquent_batch_template.csv"
-                    className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 px-3.5 py-2 rounded-lg font-bold text-xs flex items-center gap-1.5 transition-colors"
-                    title="Download delinquent CSV file template"
+                    href="/sws_minimal_delinquent_batch.csv"
+                    download="sws_minimal_batch_template.csv"
+                    className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 transition-colors"
+                    title="Download minimal 3-column CSV template (AccountNumber, PhoneNumber, AmountDue)"
                   >
                     <Download className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Download CSV Template</span>
+                    <span>Minimal Template (3 Cols)</span>
+                  </a>
+
+                  <a
+                    href="/sws_sample_delinquent_batch.csv"
+                    download="sws_delinquent_batch_template.csv"
+                    className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 transition-colors"
+                    title="Download full 6-column CSV template"
+                  >
+                    <Download className="w-3.5 h-3.5 text-slate-500" />
+                    <span>Full Template (6 Cols)</span>
                   </a>
 
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="bg-[#7A1900] hover:bg-[#5f1300] text-white px-4 py-2 rounded-lg font-bold text-xs flex items-center gap-1.5 transition-colors shadow-xs"
+                    className="bg-[#7A1900] hover:bg-[#5f1300] text-white px-3.5 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 transition-colors shadow-xs"
                   >
                     <Upload className="w-3.5 h-3.5 text-white" />
-                    <span>Upload Delinquent Aging File</span>
+                    <span>Upload Aging File</span>
                   </button>
                   <input
                     ref={fileInputRef}
@@ -591,6 +684,88 @@ export default function AdminPortalPage() {
                     className="hidden"
                     onChange={handleFileUpload}
                   />
+                </div>
+              </div>
+
+              {/* Column Specification Guide */}
+              <div className="bg-slate-50/80 border border-slate-200 rounded-lg p-3 text-xs">
+                <div className="flex items-center justify-between gap-2 mb-2 pb-1.5 border-b border-slate-200">
+                  <div className="flex items-center gap-1.5 font-bold text-slate-800">
+                    <Info className="w-4 h-4 text-[#7A1900]" />
+                    <span>CSV Column Format &amp; Ingestion Rules</span>
+                  </div>
+                  <span className="text-[11px] text-slate-500 hidden sm:inline">
+                    Columns auto-detected regardless of order
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {/* Required Columns */}
+                  <div className="bg-white border border-emerald-200 rounded-md p-2.5 shadow-2xs">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded tracking-wide">
+                        <Check className="w-3 h-3 text-emerald-700" />
+                        Required (Only 3 Columns Needed)
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-mono">Mandatory</span>
+                    </div>
+                    <ul className="space-y-1.5 text-[11px] mt-2">
+                      <li className="flex items-center justify-between">
+                        <div>
+                          <span className="font-mono font-bold text-slate-900">AccountNumber</span>
+                          <span className="text-slate-500 block text-[10px]">Identifies account in Navusoft</span>
+                        </div>
+                        <span className="text-slate-600 font-mono text-[10px] bg-slate-100 px-1 py-0.5 rounded">e.g. SWS-89545</span>
+                      </li>
+                      <li className="flex items-center justify-between">
+                        <div>
+                          <span className="font-mono font-bold text-slate-900">PhoneNumber</span>
+                          <span className="text-slate-500 block text-[10px]">Recipient mobile for payment link</span>
+                        </div>
+                        <span className="text-slate-600 font-mono text-[10px] bg-slate-100 px-1 py-0.5 rounded">e.g. (614) 562-0309</span>
+                      </li>
+                      <li className="flex items-center justify-between">
+                        <div>
+                          <span className="font-mono font-bold text-slate-900">AmountDue</span>
+                          <span className="text-slate-500 block text-[10px]">Outstanding balance to recover</span>
+                        </div>
+                        <span className="text-slate-600 font-mono text-[10px] bg-slate-100 px-1 py-0.5 rounded">e.g. 94.50</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  {/* Optional Columns */}
+                  <div className="bg-white border border-slate-200 rounded-md p-2.5 shadow-2xs">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="bg-slate-100 text-slate-600 text-[10px] font-bold uppercase px-1.5 py-0.5 rounded tracking-wide">
+                        Optional (Auto-Populates If Omitted)
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-mono">Enrichment</span>
+                    </div>
+                    <ul className="space-y-1.5 text-[11px] mt-2">
+                      <li className="flex items-center justify-between">
+                        <div>
+                          <span className="font-mono text-slate-800 font-medium">CustomerName</span>
+                          <span className="text-slate-500 block text-[10px]">Defaults to &ldquo;Resident&rdquo;</span>
+                        </div>
+                        <span className="text-slate-400 text-[10px]">Optional</span>
+                      </li>
+                      <li className="flex items-center justify-between">
+                        <div>
+                          <span className="font-mono text-slate-800 font-medium">Service</span>
+                          <span className="text-slate-500 block text-[10px]">Defaults to quarterly service</span>
+                        </div>
+                        <span className="text-slate-400 text-[10px]">Optional</span>
+                      </li>
+                      <li className="flex items-center justify-between">
+                        <div>
+                          <span className="font-mono text-slate-800 font-medium">Address</span>
+                          <span className="text-slate-500 block text-[10px]">Defaults to &ldquo;Eden Prairie, MN&rdquo;</span>
+                        </div>
+                        <span className="text-slate-400 text-[10px]">Optional</span>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
 
