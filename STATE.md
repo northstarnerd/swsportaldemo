@@ -18,6 +18,10 @@
     - Inline editable demo cell field for Patrick Badley (`SWS-89545`) with `[ 📱 Fill My Cell ]` memory.
     - Primary batch action: `[ 🚀 Launch 1-Click Text Alerts (X Accounts) ]` with sequential SMS dispatch & progress bar.
     - ERP Reconciliation: `[ 📥 Download Navusoft Cash Posting File ]` exporting ready-to-post CSV format (`AccountNumber,AmountPaid,AuthCode,PaymentMethod,Timestamp,Status`).
+    - Smart CSV Ingestion & Format Guide:
+      - Displayed explicit Required (`AccountNumber`, `PhoneNumber`, `AmountDue`) vs Optional (`CustomerName`, `Service`, `Address`) column specifications directly on the upload card.
+      - Added dual template downloads: `Minimal Template (3 Cols)` and `Full Template (6 Cols)`.
+      - Engineered RFC 4180 quote-aware CSV line tokenizer and dynamic header recognition (case-insensitive fuzzy header matching, flexible column ordering, automatic fallbacks).
   - [x] **View 2: Send Instant Payment Link (Front-Desk Call-In Tool):**
     - Fast single-customer tool for incoming phone calls from residents with expired cards or balance inquiries.
     - Phone mask input, quick fill presets (`[ 📱 Fill My Cell (Patrick) ]`, `[ 🏢 SWS Office ]`, `[ 🧑 Resident Demo ]`).
