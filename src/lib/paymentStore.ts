@@ -8,16 +8,30 @@ export interface RecordedPayment {
   status: "PAID";
 }
 
+export interface PaymentLinkData {
+  accountNumber: string;
+  customerName: string;
+  amount: number;
+  service: string;
+  address: string;
+}
+
 // In-memory global store to survive HMR and function invocations in Node runtime
 const globalForPayments = globalThis as unknown as {
   _swsPaymentStore?: Map<string, RecordedPayment>;
+  _swsLinkStore?: Map<string, PaymentLinkData>;
 };
 
 if (!globalForPayments._swsPaymentStore) {
   globalForPayments._swsPaymentStore = new Map<string, RecordedPayment>();
 }
 
+if (!globalForPayments._swsLinkStore) {
+  globalForPayments._swsLinkStore = new Map<string, PaymentLinkData>();
+}
+
 export const paymentStore = globalForPayments._swsPaymentStore;
+export const linkStore = globalForPayments._swsLinkStore;
 
 export function recordPayment(payment: Omit<RecordedPayment, "timestamp" | "status"> & { timestamp?: string; status?: "PAID" }): RecordedPayment {
   const normalizedAcc = payment.accountNumber.trim().toUpperCase();
@@ -41,7 +55,6 @@ export function recordPayment(payment: Omit<RecordedPayment, "timestamp" | "stat
 }
 
 export function getRecordedPayments(): RecordedPayment[] {
-  // Deduplicate entries by confirmation code or account number
   const seenCodes = new Set<string>();
   const results: RecordedPayment[] = [];
   for (const item of paymentStore.values()) {
@@ -60,4 +73,19 @@ export function getPaymentForAccount(accountNumber: string): RecordedPayment | u
 
 export function resetPaymentStore(): void {
   paymentStore.clear();
+}
+
+export function savePaymentLink(shortCode: string, data: PaymentLinkData): void {
+  const code = shortCode.trim().toLowerCase();
+  linkStore.set(code, data);
+  if (code.startsWith("sws-")) {
+    linkStore.set(code.replace("sws-", ""), data);
+  } else {
+    linkStore.set(`sws-${code}`, data);
+  }
+}
+
+export function getPaymentLink(shortCode: string): PaymentLinkData | undefined {
+  const code = shortCode.trim().toLowerCase();
+  return linkStore.get(code) || linkStore.get(code.startsWith("sws-") ? code.replace("sws-", "") : `sws-${code}`);
 }

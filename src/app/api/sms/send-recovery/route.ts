@@ -31,21 +31,25 @@ export async function POST(request: Request) {
       : "https://";
     const baseUrl = origin.startsWith("http") ? origin : `${protocol}${origin}`;
 
-    // Create a self-contained, stateless base64url recovery token
-    const tokenPayload = {
-      acc: accountNumber,
-      name: customerName,
-      amt: amount,
-      srv: service,
-      addr: address,
-      ts: Date.now(),
-    };
-    const token = Buffer.from(JSON.stringify(tokenPayload)).toString("base64url");
-    const paymentUrl = `${baseUrl}/pay/${token}`;
+    // Generate clean short slug based on account number (e.g., /pay/89545)
+    const cleanAcc = accountNumber.replace(/^SWS-/i, "").toLowerCase();
+    const shortCode = cleanAcc || "89545";
+
+    // Save link metadata to store for instant fast lookup
+    const { savePaymentLink } = await import("@/lib/paymentStore");
+    savePaymentLink(shortCode, {
+      accountNumber,
+      customerName,
+      amount,
+      service,
+      address,
+    });
+
+    const paymentUrl = `${baseUrl}/pay/${shortCode}`;
 
     const firstName = customerName.split(" ")[0] || "Customer";
     const formattedAmount = amount.toFixed(2);
-    const messageBody = `⚠️ SWS Billing Alert: Hi ${firstName}, your quarterly balance of $${formattedAmount} is past due. Tap to clear your balance via 1-click Apple Pay & confirm Thursday pickup: ${paymentUrl}`;
+    const messageBody = `SWS Billing Alert: Hi ${firstName}, your quarterly balance of $${formattedAmount} is past due. Tap to pay via 1-click Apple/Google Pay & keep service active: ${paymentUrl}`;
 
     // Check for Twilio Credentials
     const twilioSid = process.env.TWILIO_ACCOUNT_SID;
