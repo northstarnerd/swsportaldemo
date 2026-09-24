@@ -1072,7 +1072,24 @@ export default function AdminPortalPage() {
 
                             {/* View / Open Pay Link */}
                             <a
-                              href={acc.paymentUrl || `/pay/${Buffer.from(JSON.stringify({ acc: acc.accountNumber, amt: acc.amountDue, name: acc.customerName })).toString("base64url")}`}
+                              href={
+                                acc.paymentUrl ||
+                                `/pay/${
+                                  typeof window !== "undefined" && typeof window.btoa === "function"
+                                    ? window
+                                        .btoa(
+                                          JSON.stringify({
+                                            acc: acc.accountNumber,
+                                            amt: acc.amountDue,
+                                            name: acc.customerName,
+                                          })
+                                        )
+                                        .replace(/\+/g, "-")
+                                        .replace(/\//g, "_")
+                                        .replace(/=+$/, "")
+                                    : acc.accountNumber.replace("SWS-", "")
+                                }`
+                              }
                               target="_blank"
                               rel="noreferrer"
                               className="bg-slate-800 hover:bg-slate-700 text-slate-300 p-1.5 rounded-lg text-xs transition-colors"
