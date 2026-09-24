@@ -47,7 +47,7 @@ const DEFAULT_SAMPLE_ACCOUNTS: RecoveryAccount[] = [
   {
     accountNumber: "SWS-89545",
     customerName: "Patrick Badley",
-    phoneNumber: "(612) 555-0192",
+    phoneNumber: "(614) 562-0309",
     amountDue: 94.5,
     service: "Quarterly Trash & Organics",
     address: "6484 Promontory Drive, Eden Prairie, MN",
@@ -99,11 +99,11 @@ export default function AdminPortalPage() {
   const [isBatchSending, setIsBatchSending] = useState(false);
   const [batchProgress, setBatchProgress] = useState<{ sent: number; total: number } | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [myCellPhone, setMyCellPhone] = useState("");
+  const [myCellPhone, setMyCellPhone] = useState("(614) 562-0309");
   const [isEditingCell, setIsEditingCell] = useState(false);
 
   // Call-In Instant Dispatch State
-  const [callInPhone, setCallInPhone] = useState("(612) 555-0192");
+  const [callInPhone, setCallInPhone] = useState("(614) 562-0309");
   const [callInName, setCallInName] = useState("Patrick Badley");
   const [callInAccount, setCallInAccount] = useState("SWS-89545");
   const [callInAmount, setCallInAmount] = useState<number>(94.5);
@@ -256,15 +256,26 @@ export default function AdminPortalPage() {
       for (let i = 1; i < lines.length; i++) {
         const parts = lines[i].split(",").map((p) => p.trim().replace(/^"|"$/g, ""));
         if (parts.length >= 4) {
-          const [accNum, name, phone, amtStr, srv] = parts;
+          const [accNum, name, phone, amtStr, srv, addr] = parts;
           const parsedAmt = parseFloat(amtStr.replace(/[^0-9.]/g, "")) || 94.5;
+          const isPatrickOrDemo = Boolean(
+            i === 1 ||
+              (name && name.toLowerCase().includes("patrick")) ||
+              (accNum && accNum.includes("89545"))
+          );
+          const finalPhone = isPatrickOrDemo
+            ? (phone && phone.replace(/\D/g, "").length >= 10 ? phone : "(614) 562-0309")
+            : (phone || "(612) 555-0100");
+
           parsed.push({
             accountNumber: accNum.startsWith("SWS-") ? accNum : `SWS-${accNum}`,
             customerName: name || "Resident",
-            phoneNumber: phone || "(612) 555-0100",
+            phoneNumber: finalPhone,
             amountDue: parsedAmt,
             service: srv || "Quarterly Trash & Organics",
+            address: addr || "Eden Prairie, MN (Route 4)",
             smsStatus: "Draft",
+            isDemoTarget: isPatrickOrDemo,
           });
         }
       }
@@ -763,6 +774,16 @@ export default function AdminPortalPage() {
                     <Zap className="w-4 h-4 text-amber-300" />
                     <span>⚡ Load SWS Sample Batch (5 Accounts)</span>
                   </button>
+
+                  <a
+                    href="/sws_sample_delinquent_batch.csv"
+                    download="sws_sample_delinquent_batch.csv"
+                    className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-2.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-colors"
+                    title="Download ready-to-upload demo CSV template to your computer"
+                  >
+                    <Download className="w-3.5 h-3.5 text-slate-400" />
+                    <span>Download Demo CSV</span>
+                  </a>
 
                   <button
                     onClick={() => fileInputRef.current?.click()}
