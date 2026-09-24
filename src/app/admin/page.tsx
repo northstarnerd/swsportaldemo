@@ -535,19 +535,14 @@ export default function AdminPortalPage() {
               <span>SUBURBAN WASTE SERVICES</span>
               <span className="text-red-200 hidden sm:inline">• Savage & Eden Prairie Dispatch Operations</span>
             </div>
-            <div className="flex items-center gap-3 text-red-100 text-xs">
-              <span className="hidden md:inline">Console User: Susie Scott (Office Manager)</span>
-              <span className="hidden md:inline">•</span>
-              <span className="flex items-center gap-1">
-                <span className="h-2 w-2 rounded-full bg-emerald-400"></span>
-                <span>Twilio SMS Ready</span>
-              </span>
+            <div className="text-red-100 text-xs font-medium">
+              <span>Susie Scott (Office Manager) • SWS Front Office</span>
             </div>
           </div>
         </div>
 
         {/* Main Header Row */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3.5 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
             <img
               src="/sws-logo.png"
@@ -564,24 +559,9 @@ export default function AdminPortalPage() {
             </div>
           </div>
 
-          {/* Quick Header Controls */}
-          <div className="flex items-center gap-2.5 text-xs">
-            <button
-              onClick={handleResetDemo}
-              className="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 px-3 py-1.5 rounded-lg font-semibold transition-colors flex items-center gap-1.5"
-              title="Reset accounts to initial demo state"
-            >
-              <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
-              <span>Reset Demo State</span>
-            </button>
-
-            <Link
-              href="/"
-              className="bg-[#7A1900] hover:bg-[#5f1300] text-white px-3.5 py-1.5 rounded-lg font-bold shadow-xs transition-colors flex items-center gap-1.5"
-            >
-              <span>📱 View Resident Portal</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
+          <div className="text-right text-xs text-slate-500 hidden sm:block">
+            <div className="font-bold text-slate-700">Suburban Waste Services Inc.</div>
+            <div>Eden Prairie Route 4 Dispatch Operations</div>
           </div>
         </div>
 
@@ -1404,12 +1384,8 @@ export default function AdminPortalPage() {
           <span>
             © {new Date().getFullYear()} Suburban Waste Services • Front-Office Billing & Cash Posting System
           </span>
-          <div className="flex items-center gap-4">
-            <span>Navusoft ERP Integration Ready</span>
-            <span>•</span>
-            <Link href="/" className="text-[#7A1900] hover:underline font-semibold">
-              Return to Resident Account View
-            </Link>
+          <div className="text-slate-400">
+            Navusoft ERP Integration Ready • Dispatch (952) 937-8900
           </div>
         </div>
       </footer>
